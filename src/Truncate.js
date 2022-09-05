@@ -64,7 +64,7 @@ export default class Truncate extends React.Component {
 
         calcTargetWidth(() => {
             // Node not needed in document tree to read its content
-            if (text) {
+            if (text && text.parentNode) {
                 text.parentNode.removeChild(text);
             }
         });
@@ -93,7 +93,9 @@ export default class Truncate extends React.Component {
             timeout
         } = this;
 
-        ellipsis.parentNode.removeChild(ellipsis);
+        if(ellipsis.parentNode) {
+            ellipsis.parentNode.removeChild(ellipsis);
+        }
 
         window.removeEventListener('resize', onResize);
 
