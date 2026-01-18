@@ -126,6 +126,10 @@ export default class Truncate extends React.Component {
         return this.createMarkup(content);
     };
 
+    stripHtmlTags = (str)  => {
+        return str.replace(/<[^>]*>/g, " ");
+    }
+
     // Shim innerText to consistently break lines at <br/> but not at \n
     innerText = (node) => {
         const div = document.createElement("div");
@@ -210,7 +214,7 @@ export default class Truncate extends React.Component {
     };
 
     measureWidth = (text) => {
-        return this.canvasContext.measureText(text).width;
+        return this.canvasContext.measureText(this.stripHtmlTags(text)).width;
     };
 
     ellipsisWidth = (node) => {
