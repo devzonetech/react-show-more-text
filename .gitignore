@@ -5,3 +5,4 @@ node_modules
 example/node_modules
 *.log
 /nbproject/private/
+storybook-static/
