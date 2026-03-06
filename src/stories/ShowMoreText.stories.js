@@ -1,6 +1,6 @@
 import React from "react";
 
-import ShowMoreText from "../ShowMoreText";
+import ShowMoreText from "../../lib/ShowMoreText";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {

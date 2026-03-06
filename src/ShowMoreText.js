@@ -143,18 +143,18 @@ class ShowMoreText extends Component {
                               }
                           })
                         : children}
-                </Truncate>
-                {!truncated && expanded && (
-                    <span>
-                        {" "}
-                        <span
-                            className={anchorClass}
-                            onClick={this.toggleLines}
-                        >
-                            {less}
+                    {!truncated && expanded && (
+                        <span>
+                            {" "}
+                            <span
+                                className={anchorClass}
+                                onClick={this.toggleLines}
+                            >
+                                {less}
+                            </span>
                         </span>
-                    </span>
-                )}
+                    )}
+                </Truncate>
             </div>
         );
     }

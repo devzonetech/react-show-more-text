@@ -3,9 +3,14 @@ All notable changes to this project will be documented in this file.
 
 ## [NEXT]
 
+## [1.7.2-rc.0] - 2026-03.06
+### Fixed
+- [#56](https://github.com/devzonetech/react-show-more-text/issues/56) Show less at the end of the text (inline) #56
+
 ## [1.7.1] - 2023-11-17
 ### Fixed
-- [#53](https://github.com/devzonetech/react-show-more-text/issues/53) Last release display issue #53
+- [#53](https://github.com/devzonetech/react-show-more-text/issues/53) Last release display issue #53  
+
 
 ## [1.7.0] - 2023-11-05
 ### Fixed
