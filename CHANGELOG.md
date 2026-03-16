@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [1.7.2-rc.0] - 2026-03.06
 ### Fixed
 - [#56](https://github.com/devzonetech/react-show-more-text/issues/56) Show less at the end of the text (inline) #56
+- [#57](https://github.com/devzonetech/react-show-more-text/issues/57) added strip html tags for calculating width of line (#57)
 
 ## [1.7.1] - 2023-11-17
 ### Fixed
