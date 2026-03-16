@@ -132,7 +132,7 @@ class ShowMoreText extends Component {
                     onTruncate={this.handleTruncate}
                     ref={(ref) => (this.truncateRef = ref)}
                 >
-                    {keepNewLines
+                    {keepNewLines && typeof children === "string"
                         ? children.split("\n").map((line, i, arr) => {
                               line = <span key={i}>{line}</span>;
 

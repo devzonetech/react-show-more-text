@@ -164,4 +164,88 @@ describe("Component ShowMoreText", () => {
 
         expect(wrapper.text().indexOf("000000")).toEqual(1176);
     });
+
+    test("check raw HTML strings are not rendered as HTML when keepNewLines is true", () => {
+        const line = "<b>Test</b>\n";
+        let content = "";
+        for (var i = 0; i < 20; i++) {
+            content += line;
+        }
+
+        const wrapper = mountTracked(
+            <ShowMoreText
+                expanded={false}
+                keepNewLines={true}
+                lines={5}
+            >
+                {content}
+            </ShowMoreText>
+        );
+
+        // The text should contain the literal string "<b>Test</b>", not the bold tags
+        const text = wrapper.text();
+        expect(text).toContain("<b>Test</b>");
+        // Verify that the <b> tags are NOT interpreted as HTML tags
+        expect(wrapper.find("b")).toHaveLength(0);
+        
+        // Also verify that the HTML is escaped in the rendered output
+        const html = wrapper.html();
+        expect(html).toContain("&lt;b&gt;");
+    });
+
+    test("check raw HTML strings remain safe when expanded", () => {
+        const line = "<b>Test</b>\n";
+        let content = "";
+        for (var i = 0; i < 20; i++) {
+            content += line;
+        }
+
+        const wrapper = mountTracked(
+            <ShowMoreText
+                expanded={true}
+                keepNewLines={true}
+                lines={5}
+            >
+                {content}
+            </ShowMoreText>
+        );
+
+        // The text should contain the literal string "<b>Test</b>", not the bold tags
+        const text = wrapper.text();
+        expect(text).toContain("<b>Test</b>");
+        // Verify that the <b> tags are NOT interpreted as HTML tags
+        expect(wrapper.find("b")).toHaveLength(0);
+        
+        // Also verify that the HTML is escaped in the rendered output
+        const html = wrapper.html();
+        expect(html).toContain("&lt;b&gt;");
+    });
+
+    test("check raw HTML is properly escaped when collapsed and truncated", () => {
+        const line = "<b>Test</b>\n";
+        let content = "";
+        for (var i = 0; i < 20; i++) {
+            content += line;
+        }
+
+        const wrapper = mountTracked(
+            <ShowMoreText
+                expanded={false}
+                keepNewLines={true}
+                lines={5}
+            >
+                {content}
+            </ShowMoreText>
+        );
+
+        // The truncated text should still contain the literal string, not rendered as HTML
+        const text = wrapper.text();
+        expect(text).toContain("<b>Test</b>");
+        // Verify that the <b> tags are NOT interpreted as HTML tags even when truncated
+        expect(wrapper.find("b")).toHaveLength(0);
+        
+        // Also verify that the HTML is escaped in the rendered output
+        const html = wrapper.html();
+        expect(html).toContain("&lt;b&gt;");
+    });
 });
