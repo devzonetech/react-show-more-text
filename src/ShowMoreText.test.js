@@ -14,9 +14,30 @@ import ShowMoreText from "../lib/ShowMoreText";
 const testMessage =
     "Test Message Lorem ipsum dolor sit amet, <a href='https://www.google.com/'>Google link</a> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, <a href='https://www.devzonetech.com/'>Devzone Tech</a> quis nostrud exercitation.Test Message Lorem ipsum dolor sit amet, <a href='https://www.google.com/'>Google link</a> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, <a href='https://www.devzonetech.com/'>Devzone Tech</a> quis nostrud exercitation.";
 
+// Track mounted wrappers and clean them up after each test to avoid open handles
+const mountTracked = (...args) => {
+    const w = mount(...args);
+    global.__WRAPPERS = global.__WRAPPERS || [];
+    global.__WRAPPERS.push(w);
+    return w;
+};
+
+afterEach(() => {
+    if (global.__WRAPPERS && global.__WRAPPERS.length) {
+        global.__WRAPPERS.forEach((w) => {
+            try {
+                w.unmount();
+            } catch (e) {
+                // ignore
+            }
+        });
+        global.__WRAPPERS = [];
+    }
+});
+
 describe("Component ShowMoreText", () => {
     test("check default props", () => {
-        const wrapper = mount(<ShowMoreText>{testMessage}</ShowMoreText>);
+    const wrapper = mountTracked(<ShowMoreText>{testMessage}</ShowMoreText>);
 
         expect(wrapper.find("ShowMoreText").get(0).props).toEqual({
             lines: 3,
@@ -35,7 +56,7 @@ describe("Component ShowMoreText", () => {
     });
 
     test("click on Show more", () => {
-        const wrapper = mount(
+        const wrapper = mountTracked(
             <ShowMoreText lines={2} keepNewLines={false}>
                 {testMessage}
             </ShowMoreText>
@@ -50,7 +71,7 @@ describe("Component ShowMoreText", () => {
     });
 
     test("check default state", () => {
-        const wrapper = mount(
+        const wrapper = mountTracked(
             <ShowMoreText lines={2} keepNewLines={false}>
                 {testMessage}
             </ShowMoreText>
@@ -64,14 +85,14 @@ describe("Component ShowMoreText", () => {
         // eslint-disable-next-line
         var msg =
             "Test Message \n Lorem ipsum dolor sit amet,\n consectetur adipiscing elit, \n test new lines.";
-        const wrapper = mount(
+        const wrapper = mountTracked(
             <ShowMoreText lines={2} keepNewLines={false}>
                 {msg}
             </ShowMoreText>
         );
         expect(wrapper.find("br").length).toEqual(0);
 
-        const wrapper1 = mount(
+        const wrapper1 = mountTracked(
             // eslint-disable-next-line
             <ShowMoreText lines={2} keepNewLines={true}>
                 {msg}
@@ -81,7 +102,7 @@ describe("Component ShowMoreText", () => {
     });
 
     test("test width prop", () => {
-        const wrapper = mount(
+        const wrapper = mountTracked(
             <ShowMoreText width={150}>{testMessage}</ShowMoreText>
         );
 
@@ -94,7 +115,7 @@ describe("Component ShowMoreText", () => {
             checkValue += 10;
         };
 
-        const wrapper = mount(
+        const wrapper = mountTracked(
             <ShowMoreText onClick={onclickMethod} width={150}>
                 {testMessage}
             </ShowMoreText>
@@ -105,7 +126,7 @@ describe("Component ShowMoreText", () => {
     });
 
     test("test anchorClass prop", () => {
-        const wrapper = mount(
+        const wrapper = mountTracked(
             <ShowMoreText anchorClass="testClass1">{testMessage}</ShowMoreText>
         );
 
@@ -113,7 +134,7 @@ describe("Component ShowMoreText", () => {
     });
 
     test("check expanded prop true", () => {
-        const wrapper = mount(
+        const wrapper = mountTracked(
             <ShowMoreText lines={2} expanded>
                 {testMessage}
             </ShowMoreText>
@@ -124,7 +145,7 @@ describe("Component ShowMoreText", () => {
     });
 
     test("check expanded prop false", () => {
-        const wrapper = mount(
+        const wrapper = mountTracked(
             <ShowMoreText lines={2} expanded={false}>
                 {testMessage}
             </ShowMoreText>
@@ -135,7 +156,7 @@ describe("Component ShowMoreText", () => {
     });
 
     test("test truncatedEndingComponent prop", () => {
-        const wrapper = mount(
+        const wrapper = mountTracked(
             <ShowMoreText expanded={false} truncatedEndingComponent={"000000"}>
                 {testMessage}
             </ShowMoreText>
