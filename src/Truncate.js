@@ -119,15 +119,42 @@ export default class Truncate extends React.Component {
     };
 
     restoreReplacedLinks = (content) => {
+        // This method restores the <a> tags that were extracted earlier
+        // We need to be careful to:
+        // 1. Keep actual <a> tags unescaped (they should render as HTML)
+        // 2. Escape all other HTML-like content to prevent rendering of non-link HTML tags
+        
+        // Build a map of placeholders and their corresponding link HTML
+        const linkMap = {};
         this.replacedLinks.forEach((item) => {
-            content = content.replace(item.key, item[0]);
+            linkMap[item.key] = item[0];
+        });
+        
+        // Escape all HTML entities first
+        let escapedContent = this.escapeHtmlEntities(content);
+        
+        // Now replace the escaped placeholders with the unescaped link HTML
+        this.replacedLinks.forEach((item) => {
+            const escapedKey = this.escapeHtmlEntities(item.key);
+            escapedContent = escapedContent.replace(escapedKey, item[0]);
         });
 
-        return this.createMarkup(content);
+        return this.createMarkup(escapedContent);
     };
 
     stripHtmlTags = (str)  => {
         return str.replace(/<[^>]*>/g, " ");
+    }
+
+    escapeHtmlEntities = (text) => {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, char => map[char]);
     }
 
     // Shim innerText to consistently break lines at <br/> but not at \n
