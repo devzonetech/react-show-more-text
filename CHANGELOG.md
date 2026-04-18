@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [NEXT]
 
-## [1.7.2-rc.1] - 2026-03.16
+## [1.7.2] - 2026-04.19
 ### Fixed
 - [#33](https://github.com/devzonetech/react-show-more-text/issues/33) HTML in children is not sanitized within collapsed component #33
 - [#57](https://github.com/devzonetech/react-show-more-text/issues/57) added strip html tags for calculating width of line #57
