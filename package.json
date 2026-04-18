@@ -19,12 +19,9 @@
   "scripts": {
     "build": "vite build",
     "build:watch": "vite build --watch",
-    "dev": "vite",
     "clean": "rm -rf dist",
-    "compile": "npm run build",
-    "compile:watch": "npm run build:watch",
     "coverage": "vitest --coverage --run",
-    "lint": "eslint .",
+    "lint": "eslint src/",
     "preversion": "npm run test && npm run build",
     "report-coverage": "npm run coverage && coveralls < coverage/lcov.info",
     "storybook": "storybook dev -p 6006",

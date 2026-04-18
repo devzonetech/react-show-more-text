@@ -1,13 +1,27 @@
 {
-    "parser": "babel-eslint",
-    "extends": ["onelint", "onelint-react"],
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "extends": ["eslint:recommended"],
+    "env": {
+        "browser": true,
+        "es2020": true,
+        "node": true,
+        "jest": true
+    },
     "rules": {
         "prefer-const": "error",
+        "react/prop-types": "off"
     },
     "settings": {
         "react": {
-            "pragma": "React", // Pragma to use, default to 'React'
-            "version": "detect" // React version.
+            "pragma": "React",
+            "version": "detect"
         }
     }
 }

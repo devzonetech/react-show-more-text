@@ -1,8 +1,9 @@
 .idea
 .nyc_output
-# lib
+lib/
 node_modules
-example/node_modules
+example/
+example-next/
 *.log
 /nbproject/private/
 storybook-static/
