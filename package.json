@@ -33,7 +33,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:devzonetech/react-show-more-text.git"
+    "url": "git+ssh://git@github.com/devzonetech/react-show-more-text.git"
   },
   "homepage": "https://github.com/devzonetech/react-show-more-text",
   "keywords": [
