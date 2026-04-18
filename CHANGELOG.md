@@ -6,9 +6,10 @@ All notable changes to this project will be documented in this file.
 ## [1.7.2-rc.1] - 2026-03.16
 ### Fixed
 - [#33](https://github.com/devzonetech/react-show-more-text/issues/33) HTML in children is not sanitized within collapsed component #33
-- [#57](https://github.com/devzonetech/react-show-more-text/issues/57) added strip html tags for calculating width of line (#57)
+- [#57](https://github.com/devzonetech/react-show-more-text/issues/57) added strip html tags for calculating width of line #57
 - [#56](https://github.com/devzonetech/react-show-more-text/issues/56) Show less at the end of the text (inline) #56
-
+- [#56](https://github.com/devzonetech/react-show-more-text/issues/60) Add Vite build setup for react-show-more-text npm package #60
+- [#56](https://github.com/devzonetech/react-show-more-text/issues/56) Vitest added 60
 ## [1.7.1] - 2023-11-17
 ### Fixed
 - [#53](https://github.com/devzonetech/react-show-more-text/issues/53) Last release display issue #53  
