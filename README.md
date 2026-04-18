@@ -1,4 +1,4 @@
-# React Show More Text 1.7.1
+# React Show More Text 1.7.2
 
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
@@ -100,10 +100,44 @@ Install development dependencies
 $ npm install
 ```
 
+### Build & Compilation
+
+Build the library (ESM and CJS bundles with Vite)
+
+```
+$ npm run build
+```
+
+Watch for changes and rebuild automatically
+
+```
+$ npm run build:watch
+```
+
+Start development server (Vite)
+
+```
+$ npm run dev
+```
+
+Clean the dist folder
+
+```
+$ npm run clean
+```
+
+### Testing & Quality
+
 Run tests
 
 ```
 $ npm test
+```
+
+Run tests in watch mode
+
+```
+$ npm test:watch
 ```
 
 Run code linter
@@ -112,16 +146,18 @@ Run code linter
 $ npm run lint
 ```
 
-Compile to ES5 from /src to /lib
+### Storybook
+
+Interactive component documentation and sandbox
 
 ```
-$ npm run compile
+$ npm run storybook
 ```
 
-Storybook usage
+Build static Storybook site
 
 ```
-$ npm run storybook --legacy-peer-deps=true
+$ npm run build-storybook
 ```
 
 [npm-url]: https://npmjs.org/package/react-show-more-text

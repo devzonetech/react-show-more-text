@@ -1,22 +1,35 @@
 {
   "name": "react-show-more-text",
-  "version": "1.7.2-rc.1",
+  "version": "1.7.2-rc.2",
   "type": "module",
   "description": "The text surrounded by the component will be truncated. Anything surrounded by the component could be evaluated as text. The component react-show-more-text/ShowMoreText is fork of react-show-more/ShowMore, applied improvements, works with React 16.x.x, added onClick event.",
-  "main": "lib/ShowMoreText.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
-    "compile": "babel src/ShowMoreText.js src/Truncate.js --out-dir lib",
-    "compile:watch": "onchange \"src/**/*.js\" -- npm run compile --silent --source-maps",
+    "build": "vite build",
+    "build:watch": "vite build --watch",
+    "dev": "vite",
+    "clean": "rm -rf dist",
+    "compile": "npm run build",
+    "compile:watch": "npm run build:watch",
     "coverage": "nyc npm test && nyc report --reporter=text-lcov",
     "lint": "eslint .",
-    "preversion": "npm run test",
+    "preversion": "npm run test && npm run build",
     "report-coverage": "npm run coverage | coveralls",
     "test": "jest --runInBand",
     "test:watch": "jest --watch --runInBand",
-    "travis": "npm run compile && npm run test"
+    "travis": "npm run build && npm run test"
   },
   "repository": {
     "type": "git",
@@ -47,6 +60,7 @@
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.10",
+    "@vitejs/plugin-react": "^4.2.0",
     "babel-jest": "^29.6.4",
     "cheerio": "^1.0.0-rc.12",
     "enzyme": "^3.11.0",
@@ -57,7 +71,9 @@
     "onchange": "^7.0.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-test-renderer": "^16.14.0"
+    "react-test-renderer": "^16.14.0",
+    "terser": "^5.30.0",
+    "vite": "^5.1.0"
   },
   "dependencies": {
     "prop-types": "^15.7.2"

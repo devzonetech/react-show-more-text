@@ -1,15 +1,17 @@
-// jest.config.js
+// jest.config.cjs
 const {defaults} = require('jest-config');
 module.exports = {
 
-    moduleFileExtensions: [...defaults.moduleFileExtensions, 'js', 'tsx'],
+    moduleFileExtensions: [...defaults.moduleFileExtensions, 'js', 'jsx', 'tsx'],
+    testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
     collectCoverageFrom: [
         '**/src/*test.{js,jsx}'
     ],
-    modulePathIgnorePatterns: ['.example/'],
+    modulePathIgnorePatterns: ['.example/', 'dist/', '.storybook/'],
     testEnvironment: 'jsdom',
     transformIgnorePatterns: [
-        "node_modules/(?!(cheerio)/)"
+        "node_modules/(?!(cheerio|htmlparser2)/)",
+        "dist/"
     ],
     setupFiles: [
         "<rootDir>/jest-config/text-encoder-polyfill.js",

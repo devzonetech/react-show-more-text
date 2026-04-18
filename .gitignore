@@ -6,3 +6,4 @@ example/node_modules
 *.log
 /nbproject/private/
 storybook-static/
+dist/
