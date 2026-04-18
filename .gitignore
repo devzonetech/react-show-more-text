@@ -7,3 +7,5 @@ example/node_modules
 /nbproject/private/
 storybook-static/
 dist/
+coverage/
+.vitest/

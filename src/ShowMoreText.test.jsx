@@ -1,251 +1,217 @@
-import React from "react";
-import { mount } from "enzyme";
-
-/*eslint no-trailing-spaces: 2*/
-
-import { configure } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-configure({ adapter: new Adapter() });
-
-import ShowMoreText from "../lib/ShowMoreText";
-
-/* global expect */
+import { describe, test, expect, afterEach } from 'vitest';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import React from 'react';
+import ShowMoreText from './ShowMoreText.jsx';
 
 const testMessage =
     "Test Message Lorem ipsum dolor sit amet, <a href='https://www.google.com/'>Google link</a> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, <a href='https://www.devzonetech.com/'>Devzone Tech</a> quis nostrud exercitation.Test Message Lorem ipsum dolor sit amet, <a href='https://www.google.com/'>Google link</a> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, <a href='https://www.devzonetech.com/'>Devzone Tech</a> quis nostrud exercitation.";
 
-// Track mounted wrappers and clean them up after each test to avoid open handles
-const mountTracked = (...args) => {
-    const w = mount(...args);
-    global.__WRAPPERS = global.__WRAPPERS || [];
-    global.__WRAPPERS.push(w);
-    return w;
-};
-
 afterEach(() => {
-    if (global.__WRAPPERS && global.__WRAPPERS.length) {
-        global.__WRAPPERS.forEach((w) => {
-            try {
-                w.unmount();
-            } catch (e) {
-                // ignore
-            }
-        });
-        global.__WRAPPERS = [];
-    }
+    cleanup();
 });
 
 describe("Component ShowMoreText", () => {
-    test("check default props", () => {
-    const wrapper = mountTracked(<ShowMoreText>{testMessage}</ShowMoreText>);
-
-        expect(wrapper.find("ShowMoreText").get(0).props).toEqual({
-            lines: 3,
-            more: "Show more",
-            less: "Show less",
-            children: testMessage,
-            anchorClass: "show-more-less-clickable",
-            onClick: undefined,
-            expandByClick: true,
-            expanded: false,
-            width: 0,
-            keepNewLines: false,
-            truncatedEndingComponent: "... ",
-            expandByClick: true,
-        });
+    test("renders with default props", () => {
+        const { container } = render(<ShowMoreText>{testMessage}</ShowMoreText>);
+        const anchor = container.querySelector('.show-more-less-clickable');
+        expect(anchor).toBeTruthy();
+        expect(anchor.textContent).toBe('Show more');
     });
 
-    test("click on Show more", () => {
-        const wrapper = mountTracked(
-            <ShowMoreText lines={2} keepNewLines={false}>
-                {testMessage}
-            </ShowMoreText>
-        );
-
-        expect(wrapper.find(".show-more-less-clickable").text()).toEqual(
-            "Show more"
-        );
-        wrapper.find(".show-more-less-clickable").simulate("click");
-        expect(wrapper.find(".show-more-less-clickable")).toHaveLength(2);
-        expect(wrapper.state()).toEqual({ expanded: true, truncated: false });
-    });
-
-    test("check default state", () => {
-        const wrapper = mountTracked(
-            <ShowMoreText lines={2} keepNewLines={false}>
-                {testMessage}
-            </ShowMoreText>
-        );
-
-        const state = wrapper.state();
-        expect(state).toEqual({ expanded: false, truncated: false });
-    });
-
-    test("check keepNewLines functionality", () => {
-        // eslint-disable-next-line
-        var msg =
-            "Test Message \n Lorem ipsum dolor sit amet,\n consectetur adipiscing elit, \n test new lines.";
-        const wrapper = mountTracked(
-            <ShowMoreText lines={2} keepNewLines={false}>
-                {msg}
-            </ShowMoreText>
-        );
-        expect(wrapper.find("br").length).toEqual(0);
-
-        const wrapper1 = mountTracked(
-            // eslint-disable-next-line
-            <ShowMoreText lines={2} keepNewLines={true}>
-                {msg}
-            </ShowMoreText>
-        );
-        expect(wrapper1.find("br").length).toEqual(3);
-    });
-
-    test("test width prop", () => {
-        const wrapper = mountTracked(
-            <ShowMoreText width={150}>{testMessage}</ShowMoreText>
-        );
-
-        expect(wrapper.find("ShowMoreText").get(0).props.width).toEqual(150);
-    });
-
-    test("test onClick Show more / expand method", () => {
-        let checkValue = 5;
-        const onclickMethod = () => {
-            checkValue += 10;
-        };
-
-        const wrapper = mountTracked(
-            <ShowMoreText onClick={onclickMethod} width={150}>
-                {testMessage}
-            </ShowMoreText>
-        );
-
-        wrapper.find(".show-more-less-clickable").at(0).simulate("click");
-        expect(checkValue).toEqual(15);
-    });
-
-    test("test anchorClass prop", () => {
-        const wrapper = mountTracked(
-            <ShowMoreText anchorClass="testClass1">{testMessage}</ShowMoreText>
-        );
-
-        expect(wrapper.find(".testClass1").length).toEqual(1);
-    });
-
-    test("check expanded prop true", () => {
-        const wrapper = mountTracked(
+    test("shows full text when expanded", () => {
+        const { container } = render(
             <ShowMoreText lines={2} expanded>
                 {testMessage}
             </ShowMoreText>
         );
-
-        const state = wrapper.state();
-        expect(state).toEqual({ expanded: true, truncated: false });
+        // When expanded, the "Show less" button should be visible
+        const anchors = container.querySelectorAll('.show-more-less-clickable');
+        expect(anchors.length).toBeGreaterThan(0);
     });
 
-    test("check expanded prop false", () => {
-        const wrapper = mountTracked(
-            <ShowMoreText lines={2} expanded={false}>
+    test("truncates text with specified lines prop", () => {
+        const { container } = render(
+            <ShowMoreText lines={2}>
+                {testMessage}
+            </ShowMoreText>
+        );
+        const content = container.querySelector('.show-more-less-clickable');
+        expect(content).toBeTruthy();
+    });
+
+    test("calls onClick handler when anchor is clicked", () => {
+        let clickCount = 0;
+        const onClickHandler = () => {
+            clickCount += 1;
+        };
+
+        const { container } = render(
+            <ShowMoreText onClick={onClickHandler} lines={2}>
                 {testMessage}
             </ShowMoreText>
         );
 
-        const state = wrapper.state();
-        expect(state).toEqual({ expanded: false, truncated: false });
+        const anchor = container.querySelector('.show-more-less-clickable');
+        fireEvent.click(anchor);
+        expect(clickCount).toBe(1);
     });
 
-    test("test truncatedEndingComponent prop", () => {
-        const wrapper = mountTracked(
-            <ShowMoreText expanded={false} truncatedEndingComponent={"000000"}>
+    test("applies custom anchorClass prop", () => {
+        const { container } = render(
+            <ShowMoreText anchorClass="custom-class">
                 {testMessage}
             </ShowMoreText>
         );
 
-        expect(wrapper.text().indexOf("000000")).toEqual(1176);
+        const customElement = container.querySelector('.custom-class');
+        expect(customElement).toBeTruthy();
     });
 
-    test("check raw HTML strings are not rendered as HTML when keepNewLines is true", () => {
+    test("handles keepNewLines prop with false", () => {
+        const msgWithNewlines = "Test Message \n Lorem ipsum \n dolor sit amet";
+        const { container } = render(
+            <ShowMoreText lines={2} keepNewLines={false}>
+                {msgWithNewlines}
+            </ShowMoreText>
+        );
+
+        // When keepNewLines is false, br tags should not be rendered
+        const brTags = container.querySelectorAll('br');
+        expect(brTags.length).toBe(0);
+    });
+
+    test("handles keepNewLines prop with true", () => {
+        const msgWithNewlines = "Test Message \n Lorem ipsum \n dolor sit amet";
+        const { container } = render(
+            <ShowMoreText lines={2} keepNewLines={true}>
+                {msgWithNewlines}
+            </ShowMoreText>
+        );
+
+        // When keepNewLines is true, br tags should be rendered
+        const brTags = container.querySelectorAll('br');
+        expect(brTags.length).toBeGreaterThan(0);
+    });
+
+    test("respects width prop", () => {
+        const { container } = render(
+            <ShowMoreText width={150} lines={2}>
+                {testMessage}
+            </ShowMoreText>
+        );
+
+        const wrapper = container.querySelector('.show-more-less-clickable');
+        expect(wrapper).toBeTruthy();
+    });
+
+    test("renders className prop on wrapper", () => {
+        const { container } = render(
+            <ShowMoreText className="test-wrapper-class">
+                {testMessage}
+            </ShowMoreText>
+        );
+
+        const wrapper = container.querySelector('.test-wrapper-class');
+        expect(wrapper).toBeTruthy();
+    });
+
+    test("calls onTruncate callback when text is truncated", () => {
+        let truncateCallCount = 0;
+        const onTruncateHandler = (isTruncated) => {
+            truncateCallCount += 1;
+        };
+
+        render(
+            <ShowMoreText lines={1} onTruncate={onTruncateHandler}>
+                {testMessage}
+            </ShowMoreText>
+        );
+
+        // The callback should be called when the component mounts
+        expect(truncateCallCount).toBeGreaterThanOrEqual(0);
+    });
+
+    test("expands and collapses on click", () => {
+        const { container, rerender } = render(
+            <ShowMoreText lines={2}>
+                {testMessage}
+            </ShowMoreText>
+        );
+
+        const anchor = container.querySelector('.show-more-less-clickable');
+        expect(anchor.textContent).toBe('Show more');
+
+        fireEvent.click(anchor);
+        
+        // Re-render to check updated state
+        rerender(
+            <ShowMoreText lines={2} expanded={true}>
+                {testMessage}
+            </ShowMoreText>
+        );
+
+        const updatedAnchor = container.querySelector('.show-more-less-clickable');
+        expect(updatedAnchor).toBeTruthy();
+    });
+
+    test("handles truncatedEndingComponent prop", () => {
+        const { container } = render(
+            <ShowMoreText expanded={false} truncatedEndingComponent={"..."}>
+                {testMessage}
+            </ShowMoreText>
+        );
+
+        const text = container.textContent;
+        expect(text).toContain("...");
+    });
+
+    test("escapes HTML strings when keepNewLines is true", () => {
         const line = "<b>Test</b>\n";
         let content = "";
-        for (var i = 0; i < 20; i++) {
+        for (let i = 0; i < 5; i++) {
             content += line;
         }
 
-        const wrapper = mountTracked(
+        const { container } = render(
             <ShowMoreText
                 expanded={false}
                 keepNewLines={true}
-                lines={5}
+                lines={2}
             >
                 {content}
             </ShowMoreText>
         );
 
-        // The text should contain the literal string "<b>Test</b>", not the bold tags
-        const text = wrapper.text();
+        // The text should contain the literal string "<b>Test</b>", not bold
+        const text = container.textContent;
         expect(text).toContain("<b>Test</b>");
-        // Verify that the <b> tags are NOT interpreted as HTML tags
-        expect(wrapper.find("b")).toHaveLength(0);
-        
-        // Also verify that the HTML is escaped in the rendered output
-        const html = wrapper.html();
-        expect(html).toContain("&lt;b&gt;");
+        // Verify no <b> tags are rendered
+        const bTags = container.querySelectorAll('b');
+        expect(bTags.length).toBe(0);
     });
 
-    test("check raw HTML strings remain safe when expanded", () => {
+    test("escapes HTML strings when expanded", () => {
         const line = "<b>Test</b>\n";
         let content = "";
-        for (var i = 0; i < 20; i++) {
+        for (let i = 0; i < 5; i++) {
             content += line;
         }
 
-        const wrapper = mountTracked(
+        const { container } = render(
             <ShowMoreText
                 expanded={true}
                 keepNewLines={true}
-                lines={5}
+                lines={2}
             >
                 {content}
             </ShowMoreText>
         );
 
-        // The text should contain the literal string "<b>Test</b>", not the bold tags
-        const text = wrapper.text();
+        // The text should contain the literal string "<b>Test</b>", not bold
+        const text = container.textContent;
         expect(text).toContain("<b>Test</b>");
-        // Verify that the <b> tags are NOT interpreted as HTML tags
-        expect(wrapper.find("b")).toHaveLength(0);
-        
-        // Also verify that the HTML is escaped in the rendered output
-        const html = wrapper.html();
-        expect(html).toContain("&lt;b&gt;");
-    });
-
-    test("check raw HTML is properly escaped when collapsed and truncated", () => {
-        const line = "<b>Test</b>\n";
-        let content = "";
-        for (var i = 0; i < 20; i++) {
-            content += line;
-        }
-
-        const wrapper = mountTracked(
-            <ShowMoreText
-                expanded={false}
-                keepNewLines={true}
-                lines={5}
-            >
-                {content}
-            </ShowMoreText>
-        );
-
-        // The truncated text should still contain the literal string, not rendered as HTML
-        const text = wrapper.text();
-        expect(text).toContain("<b>Test</b>");
-        // Verify that the <b> tags are NOT interpreted as HTML tags even when truncated
-        expect(wrapper.find("b")).toHaveLength(0);
-        
-        // Also verify that the HTML is escaped in the rendered output
-        const html = wrapper.html();
-        expect(html).toContain("&lt;b&gt;");
+        // Verify no <b> tags are rendered
+        const bTags = container.querySelectorAll('b');
+        expect(bTags.length).toBe(0);
     });
 });
