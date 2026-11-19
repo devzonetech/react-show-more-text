@@ -2,7 +2,8 @@
 .nyc_output
 lib/
 node_modules
-example/
+example/*
+!example/vite.config.ts
 example-next/
 *.log
 /nbproject/private/

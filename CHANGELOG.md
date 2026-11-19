@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 
 ## [NEXT]
 
+## [1.7.3] - 2026-11.19
+
+### Fixed
+- [#79](https://github.com/devzonetech/react-show-more-text/issues/79) 1.7.2 ESM bundle throws require("react") at runtime in webpack/rspack builds #79
+- Vulnerable dependencies
+
+
+### Added
+- Support for React 19
+- Vite frontend build tool
+- Example project for testing react-show-more-text in React 19
+
+### Removed
+- Support for React 17
+
 ## [1.7.2] - 2026-04.19
 ### Fixed
 - [#33](https://github.com/devzonetech/react-show-more-text/issues/33) HTML in children is not sanitized within collapsed component #33
