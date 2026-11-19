@@ -1,6 +1,6 @@
 {
   "name": "react-show-more-text",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "type": "module",
   "description": "The text surrounded by the component will be truncated. Anything surrounded by the component could be evaluated as text. The component react-show-more-text/ShowMoreText is fork of react-show-more/ShowMore, applied improvements, works with React 16.x.x, added onClick event.",
   "main": "dist/index.cjs.js",
@@ -47,43 +47,33 @@
     "show text",
     "hide text"
   ],
-  "author": "Zdravko Shishmanov <zdrsoft@gmail.com>",
+  "author": "Zdravko Shishmanov",
   "license": "ISC",
   "peerDependencies": {
-    "react": "16 - 18.x"
+    "react": "18 - 19.x"
   },
   "devDependencies": {
-    "@babel/cli": "^7.22.10",
-    "@babel/core": "^7.22.10",
-    "@babel/eslint-parser": "^7.22.10",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/preset-env": "^7.22.10",
-    "@babel/preset-react": "^7.22.10",
-    "@testing-library/jest-dom": "^5.16.5",
+    "@babel/core": "^7.29.7",
+    "@babel/eslint-parser": "^7.29.9",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "@storybook/react-vite": "^8.5.3",
     "@testing-library/react": "^12.1.5",
-    "@vitejs/plugin-react": "^4.2.0",
-    "@vitest/coverage-v8": "^4.1.4",
-    "@vitest/ui": "^1.0.0",
-    "@storybook/addon-essentials": "^7.6.10",
-    "@storybook/addon-interactions": "^7.6.10",
-    "@storybook/addon-links": "^7.6.10",
-    "@storybook/react": "^7.6.10",
-    "@storybook/react-vite": "^7.6.10",
-    "storybook": "^7.6.10",
-    "cheerio": "^1.0.0-rc.12",
-    "eslint": "^8.50.0",
-    "happy-dom": "^20.9.0",
-    "jsdom": "^29.0.2",
-    "onchange": "^7.0.0",
+    "@types/react-show-more-text": "^1.4.5",
+    "@vitejs/plugin-react": "^4.7.0",
+    "@vitest/coverage-v8": "^4.1.12",
+    "eslint": "^8.57.1",
+    "jsdom": "^29.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-test-renderer": "^18.3.1",
-    "terser": "^5.30.0",
-    "vite": "^8.0.8",
-    "vitest": "^4.1.4"
+    "storybook": "^10.6.5",
+    "terser": "^5.51.2",
+    "vite": "^8.3.5",
+    "vitest": "^4.1.12"
   },
   "dependencies": {
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.8.1"
   },
   "browserslist": "> 0.25%, not dead"
 }
