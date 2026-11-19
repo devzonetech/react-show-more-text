@@ -1,10 +1,10 @@
-# React Show More Text 1.7.2
+# React Show More Text 1.7.3
 
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![Build status][travis-image]][travis-url]
 
-The text surrounded by the component will be truncated. Anything surrounded by the component could be evaluated as text. The component react-show-more-text/ShowMoreText is fork of react-show-more/ShowMore, applied improvements, added onClick event, works with React 16.x.x, React 18.x.x, Next.Js 13.3.x and upper.
+The text surrounded by the component will be truncated. Anything surrounded by the component could be evaluated as text. The component react-show-more-text/ShowMoreText is fork of react-show-more/ShowMore, applied improvements, added onClick event, works with React React 18.x.x, Next.Js 13.3.x and upper.
 
 ## Demo
 
