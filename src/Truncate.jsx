@@ -20,6 +20,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 import React from "react";
 import PropTypes from "prop-types";
 
+const cjkCharacters = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+
 export default class Truncate extends React.Component {
     static propTypes = {
         children: PropTypes.node,
@@ -400,6 +402,42 @@ export default class Truncate extends React.Component {
 
                 // The first word of this line is too long to fit it
                 if (lower === 0) {
+                    const firstWord = textWords[0];
+                    const characters = Array.from(firstWord);
+                    const containsLink = this.replacedLinks.some(({ key }) =>
+                        firstWord.includes(key)
+                    );
+
+                    if (cjkCharacters.test(firstWord) && !containsLink) {
+                        let characterLower = 0;
+                        let characterUpper = characters.length - 1;
+
+                        while (characterLower <= characterUpper) {
+                            const middle = Math.floor(
+                                (characterLower + characterUpper) / 2
+                            );
+                            const testLine = characters
+                                .slice(0, middle + 1)
+                                .join("");
+
+                            if (measureWidth(testLine) <= targetWidth) {
+                                characterLower = middle + 1;
+                            } else {
+                                characterUpper = middle - 1;
+                            }
+                        }
+
+                        if (characterLower > 0) {
+                            textWords[0] = characters
+                                .slice(characterLower)
+                                .join("");
+                            lines.push(
+                                characters.slice(0, characterLower).join("")
+                            );
+                            continue;
+                        }
+                    }
+
                     // Jump to processing of last line
                     line = numLines - 1;
                     continue;
