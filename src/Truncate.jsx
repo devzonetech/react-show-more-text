@@ -70,6 +70,14 @@ export default class Truncate extends React.Component {
         });
 
         window.addEventListener("resize", onResize);
+
+        const container = this.elements.target.parentNode;
+        if (typeof ResizeObserver !== "undefined" && container) {
+            this.resizeObserver = new ResizeObserver((entries) => {
+                this.calcTargetWidth(undefined, entries[0].contentRect.width);
+            });
+            this.resizeObserver.observe(container);
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -96,6 +104,7 @@ export default class Truncate extends React.Component {
         }
 
         window.removeEventListener("resize", onResize);
+        this.resizeObserver?.disconnect();
 
         window.cancelAnimationFrame(timeout);
     }
@@ -234,7 +243,7 @@ export default class Truncate extends React.Component {
         }
     };
 
-    calcTargetWidth = (callback) => {
+    calcTargetWidth = (callback, observedWidth) => {
         const {
             elements: { target },
             calcTargetWidth,
@@ -249,8 +258,10 @@ export default class Truncate extends React.Component {
 
         const targetWidth =
             width ||
-            // Floor the result to deal with browser subpixel precision
-            Math.floor(target.parentNode.getBoundingClientRect().width);
+            // Use the content-box width when available, and floor subpixels.
+            Math.floor(
+                observedWidth ?? target.parentNode.getBoundingClientRect().width
+            );
 
         // Delay calculation until parent node is inserted to the document
         // Mounting order in React is ChildComponent, ParentComponent

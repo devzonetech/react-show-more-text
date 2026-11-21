@@ -74,6 +74,30 @@ JapaneseText.args = {
     expanded: false,
 };
 
+export const ResizableContainerWidth = (args) => (
+    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
+        <p>Drag the right edge to resize the container and watch the text reflow.</p>
+        <div
+            style={{
+                width: "396px",
+                minWidth: "200px",
+                maxWidth: "100%",
+                overflow: "auto",
+                resize: "horizontal",
+                outline: "1px dashed currentColor",
+            }}
+        >
+            <ShowMoreText {...args}>{longContent}</ShowMoreText>
+        </div>
+    </div>
+);
+ResizableContainerWidth.args = {
+    lines: 3,
+    more: "Show more",
+    less: "Show less",
+    expanded: false,
+};
+
 export const TruncatedAt2Lines = Template.bind({});
 TruncatedAt2Lines.args = {
     lines: 2,
