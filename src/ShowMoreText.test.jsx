@@ -481,7 +481,7 @@ describe("Truncate internals", () => {
         });
         truncate.elements.target = target;
         truncate.canvasContext = { font: "" };
-        vi.stubGlobal("requestAnimationFrame", vi.fn((callback) => {
+        vi.stubGlobal("requestAnimationFrame", vi.fn((_callback) => {
             return 1;
         }));
 

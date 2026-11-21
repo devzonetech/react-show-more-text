@@ -104,7 +104,7 @@ export default class Truncate extends React.Component {
         this.replacedLinks = [];
 
         content.replace(
-            /(<a[\s]+([^>]+)>((?:.(?!\<\/a\>))*.)<\/a>)/g,
+            /(<a[\s]+([^>]+)>((?:.(?!<\/a>))*.)<\/a>)/g,
             function () {
                 const item = Array.prototype.slice.call(arguments, 1, 4);
                 do {
@@ -146,7 +146,7 @@ export default class Truncate extends React.Component {
                         if (["http:", "https:", "mailto:", "tel:"].includes(protocol)) {
                             attributes.href = href;
                         }
-                    } catch (error) {
+                    } catch {
                         // Invalid URLs are rendered as non-clickable link text.
                     }
                 }
@@ -211,7 +211,7 @@ export default class Truncate extends React.Component {
         test.innerHTML = "foo<br/>bar";
 
         if (test[contentKey].replace(/\r\n|\r/g, "\n") !== "foo\nbar") {
-            div.innerHTML = div.innerHTML.replace(/<br.*?[\/]?>/gi, "\n");
+            div.innerHTML = div.innerHTML.replace(/<br.*?[/]?>/gi, "\n");
             text = div[contentKey];
         }
 
