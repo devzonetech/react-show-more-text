@@ -292,7 +292,7 @@ export default class Truncate extends React.Component {
     getLines = () => {
         const {
             elements,
-            props: { lines: numLines, ellipsis, trimWhitespace },
+            props: { children, lines: numLines, ellipsis, trimWhitespace },
             state: { targetWidth },
             innerText,
             measureWidth,
@@ -416,6 +416,10 @@ export default class Truncate extends React.Component {
         }
 
         onTruncate(didTruncate);
+
+        if (!didTruncate && typeof children !== "string") {
+            return children;
+        }
 
         return lines.map(renderLine);
     };

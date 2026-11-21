@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - [#55](https://github.com/devzonetech/react-show-more-text/issues/55) Escape truncated content and prevent unsafe links from being restored as HTML
+- [#50](https://github.com/devzonetech/react-show-more-text/issues/50) Preserve event handlers on React child components when their content fits within the configured lines
 
 ### Removed
  - Travis builds
