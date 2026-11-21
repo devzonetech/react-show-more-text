@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Github builds via actions/workflows
 
+### Fixed
+- [#55](https://github.com/devzonetech/react-show-more-text/issues/55) Escape truncated content and prevent unsafe links from being restored as HTML
+
 ### Removed
  - Travis builds
 

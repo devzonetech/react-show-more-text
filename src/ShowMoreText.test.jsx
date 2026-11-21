@@ -371,7 +371,7 @@ describe("Component ShowMoreText", () => {
 });
 
 describe("Truncate internals", () => {
-    test("extracts and restores HTML links while escaping surrounding HTML", () => {
+    test("restores links as React elements and keeps surrounding markup as text", () => {
         const truncate = new Truncate({
             children: "",
             ellipsis: "…",
@@ -387,25 +387,22 @@ describe("Truncate internals", () => {
         expect(truncate.replacedLinks).toHaveLength(1);
 
         const restored = truncate.restoreReplacedLinks(extracted);
-        expect(restored.props.dangerouslySetInnerHTML.__html).toContain(
-            "&lt;b&gt;unsafe&lt;/b&gt;"
+        const { container } = render(<div>{restored}</div>);
+
+        expect(container.querySelector("b")).toBeNull();
+        expect(container.textContent).toContain("<b>unsafe</b>");
+        expect(container.querySelector("a").getAttribute("href")).toBe(
+            "https://example.com"
         );
-        expect(restored.props.dangerouslySetInnerHTML.__html).toContain(
-            '<a href="https://example.com">Example</a>'
-        );
+        expect(container.querySelector("a").textContent).toBe("Example");
     });
 
     test("escapes HTML entities and strips tags for width measurement", () => {
         const truncate = new Truncate({ children: "", width: 100 });
-        expect(truncate.escapeHtmlEntities(`<b title="x">&'`)).toBe(
-            "&lt;b title=&quot;x&quot;&gt;&amp;&#039;"
-        );
         expect(truncate.stripHtmlTags("<b>Hello</b> <a>world</a>")).toBe(
             " Hello   world "
         );
         expect(truncate.trimRight("text   ")).toBe("text");
-        expect(truncate.createMarkup("<b>safe</b>").props.dangerouslySetInnerHTML)
-            .toEqual({ __html: "<b>safe</b>" });
     });
 
     test("innerText handles anchors and explicit <br> elements", () => {
@@ -641,8 +638,7 @@ describe("Truncate internals", () => {
         const lines = truncate.getLines();
 
         expect(lines).toHaveLength(2);
-        expect(lines[0][0].props.children.props.dangerouslySetInnerHTML.__html)
-            .toBe("one");
+        expect(lines[0][0].props.children).toBe("one");
         expect(lines[0][1].type).toBe("br");
         expect(lines[1].props.children.props.children[1]).toBe("...");
         expect(truncate.onTruncate).toHaveBeenCalledWith(true);
