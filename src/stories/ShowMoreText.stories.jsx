@@ -30,6 +30,9 @@ const longContent = (
     </>
 );
 
+const japaneseContent =
+    "ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。";
+
 const Template = (args) => (
     <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
         <ShowMoreText {...args}>
@@ -53,6 +56,18 @@ const InteractiveButton = memo(function InteractiveButton({
 
 export const Default = Template.bind({});
 Default.args = {
+    lines: 3,
+    more: "Show more",
+    less: "Show less",
+    expanded: false,
+};
+
+export const JapaneseText = (args) => (
+    <div style={{ maxWidth: "450px", margin: "0 auto", padding: "20px" }}>
+        <ShowMoreText {...args}>{japaneseContent}</ShowMoreText>
+    </div>
+);
+JapaneseText.args = {
     lines: 3,
     more: "Show more",
     less: "Show less",

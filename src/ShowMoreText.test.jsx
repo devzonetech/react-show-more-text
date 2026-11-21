@@ -687,6 +687,36 @@ describe("Truncate internals", () => {
         expect(truncate.onTruncate).toHaveBeenCalledWith(true);
     });
 
+    test("wraps Japanese text across the configured lines", () => {
+        const japaneseText =
+            "ダミーテキストです。ダミーテキストです。ダミーテキストです。ダミーテキストです。";
+        const truncate = new Truncate({
+            children: "",
+            ellipsis: "...",
+            lines: 3,
+            trimWhitespace: false,
+            width: 50,
+        });
+        const text = document.createElement("span");
+        text.textContent = japaneseText;
+        const ellipsis = document.createElement("span");
+        Object.defineProperty(ellipsis, "offsetWidth", { value: 10 });
+        truncate.elements = { text, ellipsis };
+        truncate.state = { targetWidth: 50 };
+        truncate.measureWidth = (value) => Array.from(value).length * 10;
+        truncate.onTruncate = vi.fn();
+
+        const lines = truncate.getLines();
+
+        expect(lines).toHaveLength(3);
+        expect(lines[0][0].props.children).toBe("ダミーテキ");
+        expect(lines[0][1].type).toBe("br");
+        expect(lines[1][0].props.children).toBe("ストです。");
+        expect(lines[1][1].type).toBe("br");
+        expect(lines[2].props.children.props.children[1]).toBe("...");
+        expect(truncate.onTruncate).toHaveBeenCalledWith(true);
+    });
+
     test("renderLine handles final lines, line breaks, and blank lines", () => {
         const truncate = new Truncate({ children: "text" });
         const final = truncate.renderLine(<span>last</span>, 1, [null, "last"]);
