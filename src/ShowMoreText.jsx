@@ -59,7 +59,7 @@ class ShowMoreText extends Component {
         this._isMounted = false;
     }
 
-    handleTruncate = (truncated) => {
+    handleTruncate = (truncated, onTruncate = this.props.onTruncate) => {
         if (this._isMounted && truncated !== this.state.truncated) {
             this.setState({
                 truncated,
@@ -67,7 +67,7 @@ class ShowMoreText extends Component {
             if (truncated) {
                 this.truncateRef.onResize();
             }
-            this.props.onTruncate && this.props.onTruncate();
+            onTruncate && onTruncate();
         }
     };
 
@@ -129,7 +129,9 @@ class ShowMoreText extends Component {
                             </span>
                         </span>
                     }
-                    onTruncate={this.handleTruncate}
+                    onTruncate={(truncated) =>
+                        this.handleTruncate(truncated, onTruncate)
+                    }
                     ref={(ref) => (this.truncateRef = ref)}
                 >
                     {keepNewLines && typeof children === "string"

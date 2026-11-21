@@ -104,11 +104,13 @@ export default class Truncate extends React.Component {
         this.replacedLinks = [];
 
         content.replace(
-            /(<a[\s]+([^>]+)>((?:.(?!\<\/a\>))*.)<\/a>)/g,
+            /(<a[\s]+([^>]+)>((?:.(?!<\/a>))*.)<\/a>)/g,
             function () {
                 const item = Array.prototype.slice.call(arguments, 1, 4);
-                item.key =
-                    "[" + "@".repeat(item[2].length - 1) + "=" + i++ + "]";
+                do {
+                    item.key =
+                        "[" + "@".repeat(item[2].length - 1) + "=" + i++ + "]";
+                } while (content.includes(item.key));
                 _self.replacedLinks.push(item);
 
                 content = content.replace(item[0], item.key);
@@ -119,42 +121,77 @@ export default class Truncate extends React.Component {
     };
 
     restoreReplacedLinks = (content) => {
-        // This method restores the <a> tags that were extracted earlier
-        // We need to be careful to:
-        // 1. Keep actual <a> tags unescaped (they should render as HTML)
-        // 2. Escape all other HTML-like content to prevent rendering of non-link HTML tags
-        
-        // Build a map of placeholders and their corresponding link HTML
-        const linkMap = {};
-        this.replacedLinks.forEach((item) => {
-            linkMap[item.key] = item[0];
-        });
-        
-        // Escape all HTML entities first
-        let escapedContent = this.escapeHtmlEntities(content);
-        
-        // Now replace the escaped placeholders with the unescaped link HTML
-        this.replacedLinks.forEach((item) => {
-            const escapedKey = this.escapeHtmlEntities(item.key);
-            escapedContent = escapedContent.replace(escapedKey, item[0]);
+        const parts = [];
+        let offset = 0;
+
+        this.replacedLinks.forEach((item, index) => {
+            const linkIndex = content.indexOf(item.key, offset);
+            if (linkIndex === -1) {
+                return;
+            }
+
+            if (linkIndex > offset) {
+                parts.push(content.slice(offset, linkIndex));
+            }
+
+            const parsedLink = new DOMParser()
+                .parseFromString(item[0], "text/html")
+                .querySelector("a");
+            if (parsedLink) {
+                const attributes = {};
+                const href = parsedLink.getAttribute("href");
+                if (href) {
+                    try {
+                        const protocol = new URL(href, document.baseURI).protocol;
+                        if (["http:", "https:", "mailto:", "tel:"].includes(protocol)) {
+                            attributes.href = href;
+                        }
+                    } catch {
+                        // Invalid URLs are rendered as non-clickable link text.
+                    }
+                }
+
+                ["class", "rel", "target", "title"].forEach((attribute) => {
+                    const value = parsedLink.getAttribute(attribute);
+                    if (value) {
+                        attributes[
+                            attribute === "class" ? "className" : attribute
+                        ] = value;
+                    }
+                });
+                if (attributes.target === "_blank") {
+                    attributes.rel = [
+                        ...new Set(
+                            `${attributes.rel || ""} noopener noreferrer`
+                                .trim()
+                                .split(/\s+/)
+                        ),
+                    ].join(" ");
+                }
+                parts.push(
+                    React.createElement(
+                        "a",
+                        { ...attributes, key: `link-${index}` },
+                        parsedLink.textContent
+                    )
+                );
+            }
+
+            offset = linkIndex + item.key.length;
         });
 
-        return this.createMarkup(escapedContent);
+        if (offset < content.length) {
+            parts.push(content.slice(offset));
+        }
+
+        if (parts.length === 0) {
+            return content;
+        }
+        return parts.length === 1 ? parts[0] : parts;
     };
 
-    stripHtmlTags = (str)  => {
+    stripHtmlTags = (str) => {
         return str.replace(/<[^>]*>/g, " ");
-    }
-
-    escapeHtmlEntities = (text) => {
-        const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        };
-        return text.replace(/[&<>"']/g, char => map[char]);
     }
 
     // Shim innerText to consistently break lines at <br/> but not at \n
@@ -174,7 +211,7 @@ export default class Truncate extends React.Component {
         test.innerHTML = "foo<br/>bar";
 
         if (test[contentKey].replace(/\r\n|\r/g, "\n") !== "foo\nbar") {
-            div.innerHTML = div.innerHTML.replace(/<br.*?[\/]?>/gi, "\n");
+            div.innerHTML = div.innerHTML.replace(/<br.*?[/]?>/gi, "\n");
             text = div[contentKey];
         }
 
@@ -250,10 +287,6 @@ export default class Truncate extends React.Component {
 
     trimRight = (text) => {
         return text.replace(/\s+$/, "");
-    };
-
-    createMarkup = (str) => {
-        return <span dangerouslySetInnerHTML={{ __html: str }} />;
     };
 
     getLines = () => {

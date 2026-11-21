@@ -8,9 +8,9 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs.js"
     }
   },
   "files": [
@@ -53,26 +53,36 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
-    "@babel/eslint-parser": "^7.29.9",
-    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-class-properties": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
-    "@storybook/react-vite": "^8.5.3",
-    "@testing-library/react": "^12.1.5",
+    "@eslint/js": "^10.0.1",
+    "@storybook/react-vite": "8.6.19",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
     "@types/react-show-more-text": "^1.4.5",
     "@vitejs/plugin-react": "^4.7.0",
     "@vitest/coverage-v8": "^4.1.12",
-    "eslint": "^8.57.1",
+    "eslint": "^10.15.0",
+    "globals": "^16.5.0",
     "jsdom": "^29.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "storybook": "^10.6.5",
+    "storybook": "8.6.19",
     "terser": "^5.51.2",
-    "vite": "^8.3.5",
+    "vite": "^6.4.6",
     "vitest": "^4.1.12"
   },
   "dependencies": {
     "prop-types": "^15.8.1"
   },
-  "browserslist": "> 0.25%, not dead"
+  "overrides": {
+    "@joshwooding/vite-plugin-react-docgen-typescript": {
+      "glob": "14.0.6"
+    }
+  },
+  "browserslist": "> 0.25%, not dead",
+  "allowScripts": {
+    "esbuild@0.25.12": true
+  }
 }

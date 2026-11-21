@@ -8,7 +8,6 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "src/index.js"),
       name: "ShowMoreText",
-      formats: ["es", "cjs"],
     },
     rollupOptions: {
       external: [/^react(?:\/.*)?$/, "react-dom", "prop-types"],
