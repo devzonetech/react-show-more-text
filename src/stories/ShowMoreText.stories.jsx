@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useState } from "react";
 
 import ShowMoreText from "../ShowMoreText";
 
@@ -37,6 +37,19 @@ const Template = (args) => (
         </ShowMoreText>
     </div>
 );
+
+const InteractiveButton = memo(function InteractiveButton({
+    label,
+    clickedLabel,
+}) {
+    const [clicked, setClicked] = useState(false);
+
+    return (
+        <button type="button" onClick={() => setClicked((value) => !value)}>
+            {clicked ? clickedLabel : label}
+        </button>
+    );
+});
 
 export const Default = Template.bind({});
 Default.args = {
@@ -93,6 +106,26 @@ WithLinks.args = {
     expanded: false,
 };
 
+export const WithInteractiveComponents = (args) => (
+    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
+        <ShowMoreText {...args}>
+            This content includes interactive React components:{" "}
+            <InteractiveButton label="Click to confirm" clickedLabel="Confirmed" />{" "}
+            and{" "}
+            <InteractiveButton label="Click to save" clickedLabel="Saved" />.
+            Their click handlers continue to work when the content fits within
+            the configured lines.
+        </ShowMoreText>
+    </div>
+);
+WithInteractiveComponents.args = {
+    lines: 5,
+    width: 600,
+    more: "Show more",
+    less: "Show less",
+    expanded: false,
+};
+
 export const NonClickable = (args) => (
     <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
         <ShowMoreText {...args}>
@@ -115,4 +148,3 @@ WithClickableClass.args = {
     expanded: false,
     anchorClass: "show-more-less-clickable",
 };
-

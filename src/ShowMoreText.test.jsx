@@ -58,6 +58,25 @@ describe("Component ShowMoreText", () => {
         expect(clickCount).toBe(1);
     });
 
+    test("preserves click handlers on React children when content fits", () => {
+        const onChildClick = vi.fn();
+        const ClickableChild = ({ onClick }) => (
+            <button type="button" onClick={onClick}>
+                Click child
+            </button>
+        );
+
+        const { getByRole } = render(
+            <ShowMoreText lines={2} width={300}>
+                <ClickableChild onClick={onChildClick} />
+            </ShowMoreText>
+        );
+
+        fireEvent.click(getByRole("button", { name: "Click child" }));
+
+        expect(onChildClick).toHaveBeenCalledTimes(1);
+    });
+
     test("applies custom anchorClass prop", () => {
         const { container } = render(
             <ShowMoreText anchorClass="custom-class">
