@@ -544,6 +544,43 @@ describe("Truncate internals", () => {
         expect(truncateRef.current.state.targetWidth).toBe(75);
     });
 
+    test("updates the measured width when the container resizes", () => {
+        let resizeCallback;
+        const disconnect = vi.fn();
+        const observe = vi.fn();
+        class MockResizeObserver {
+            constructor(callback) {
+                resizeCallback = callback;
+            }
+
+            observe = observe;
+            disconnect = disconnect;
+        }
+
+        vi.stubGlobal("ResizeObserver", MockResizeObserver);
+        vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
+            width: 396,
+        });
+
+        const truncateRef = React.createRef();
+        const { unmount } = render(
+            <Truncate ref={truncateRef}>Responsive text</Truncate>
+        );
+        const container = truncateRef.current.elements.target.parentNode;
+
+        expect(truncateRef.current.state.targetWidth).toBe(396);
+        expect(observe).toHaveBeenCalledWith(container);
+
+        act(() => {
+            resizeCallback([{ contentRect: { width: 397 } }]);
+        });
+
+        expect(truncateRef.current.state.targetWidth).toBe(397);
+
+        unmount();
+        expect(disconnect).toHaveBeenCalledOnce();
+    });
+
     test("recalculates width and rerenders when children or width change", () => {
         const truncateRef = React.createRef();
         const { rerender } = render(
