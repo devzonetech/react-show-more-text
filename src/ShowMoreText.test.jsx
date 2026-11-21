@@ -9,6 +9,7 @@ const testMessage =
 
 afterEach(() => {
     cleanup();
+    vi.unstubAllGlobals();
 });
 
 describe("Component ShowMoreText", () => {
@@ -116,20 +117,17 @@ describe("Component ShowMoreText", () => {
         expect(wrapper).toBeTruthy();
     });
 
-    test("calls onTruncate callback when text is truncated", () => {
-        let truncateCallCount = 0;
-        const onTruncateHandler = (isTruncated) => {
-            truncateCallCount += 1;
-        };
+    test("calls onTruncate callback when text is truncated", async () => {
+        const onTruncateHandler = vi.fn();
 
         render(
-            <ShowMoreText lines={1} onTruncate={onTruncateHandler}>
+            <ShowMoreText lines={1} width={100} onTruncate={onTruncateHandler}>
                 {testMessage}
             </ShowMoreText>
         );
 
-        // The callback should be called when the component mounts
-        expect(truncateCallCount).toBeGreaterThanOrEqual(0);
+        await waitFor(() => expect(onTruncateHandler).toHaveBeenCalled());
+        expect(onTruncateHandler).toHaveBeenCalledWith();
     });
 
     test("expands and collapses on click", () => {
@@ -286,6 +284,77 @@ describe("Component ShowMoreText", () => {
         expect(onTruncate).not.toHaveBeenCalled();
     });
 
+    test("ignores truncation notifications after unmount", () => {
+        const onTruncate = vi.fn();
+        const ref = React.createRef();
+        const { unmount } = render(
+            <ShowMoreText ref={ref} onTruncate={onTruncate}>
+                {"Short"}
+            </ShowMoreText>
+        );
+        const instance = ref.current;
+
+        unmount();
+        instance.handleTruncate(true);
+
+        expect(onTruncate).not.toHaveBeenCalled();
+        expect(instance.state.truncated).toBe(false);
+    });
+
+    test("does not toggle lines after unmount", () => {
+        const onClick = vi.fn();
+        const ref = React.createRef();
+        const { unmount } = render(
+            <ShowMoreText ref={ref} onClick={onClick}>
+                {"Short"}
+            </ShowMoreText>
+        );
+        const instance = ref.current;
+        const event = { preventDefault: vi.fn() };
+
+        unmount();
+        instance.toggleLines(event);
+
+        expect(event.preventDefault).toHaveBeenCalled();
+        expect(onClick).not.toHaveBeenCalled();
+        expect(instance.state.expanded).toBe(false);
+    });
+
+    test("notifies when truncation changes in either direction", () => {
+        const onTruncate = vi.fn();
+        const ref = React.createRef();
+        render(
+            <ShowMoreText ref={ref} onTruncate={onTruncate}>
+                {"Short"}
+            </ShowMoreText>
+        );
+        const onResize = vi.spyOn(ref.current.truncateRef, "onResize");
+
+        act(() => {
+            ref.current.handleTruncate(true);
+        });
+        act(() => {
+            ref.current.handleTruncate(false);
+        });
+
+        expect(ref.current.state.truncated).toBe(false);
+        expect(onResize).toHaveBeenCalledTimes(1);
+        expect(onTruncate).toHaveBeenCalledTimes(2);
+    });
+
+    test("does not call onClick when expanding is disabled and no callback is set", () => {
+        const ref = React.createRef();
+        const { container } = render(
+            <ShowMoreText ref={ref} expandByClick={false} lines={1}>
+                {"A sufficiently long test message"}
+            </ShowMoreText>
+        );
+
+        fireEvent.click(container.querySelector(".show-more-less-clickable"));
+
+        expect(ref.current.state.expanded).toBe(false);
+    });
+
     test("renders custom text and marks unmounted state", () => {
         const ref = React.createRef();
         const { container, unmount } = render(
@@ -354,6 +423,37 @@ describe("Truncate internals", () => {
         expect(truncate.replacedLinks).toHaveLength(1);
     });
 
+    test("innerText uses the native innerText path when available", () => {
+        const previousDescriptor = Object.getOwnPropertyDescriptor(
+            HTMLElement.prototype,
+            "innerText"
+        );
+        Object.defineProperty(HTMLElement.prototype, "innerText", {
+            configurable: true,
+            get() {
+                return this.textContent;
+            },
+        });
+
+        try {
+            const truncate = new Truncate({ children: "" });
+            const node = document.createElement("div");
+            node.innerHTML = "First<br/>Second";
+
+            expect(truncate.innerText(node)).toBe("First\nSecond");
+        } finally {
+            if (previousDescriptor) {
+                Object.defineProperty(
+                    HTMLElement.prototype,
+                    "innerText",
+                    previousDescriptor
+                );
+            } else {
+                delete HTMLElement.prototype.innerText;
+            }
+        }
+    });
+
     test("onTruncate schedules callback only for function props", () => {
         vi.stubGlobal("requestAnimationFrame", vi.fn((callback) => {
             callback();
@@ -413,6 +513,67 @@ describe("Truncate internals", () => {
         expect(truncateRef.current.state.targetWidth).toBe(125);
     });
 
+    test("measures parent width when no explicit width is provided", () => {
+        const truncateRef = React.createRef();
+        vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
+            width: 75,
+        });
+
+        render(
+            <Truncate ref={truncateRef}>
+                Short text
+            </Truncate>
+        );
+
+        expect(truncateRef.current.state.targetWidth).toBe(75);
+    });
+
+    test("recalculates width and rerenders when children or width change", () => {
+        const truncateRef = React.createRef();
+        const { rerender } = render(
+            <Truncate ref={truncateRef} width={100}>
+                Original text
+            </Truncate>
+        );
+        const forceUpdate = vi.spyOn(truncateRef.current, "forceUpdate");
+        const calcTargetWidth = vi.spyOn(
+            truncateRef.current,
+            "calcTargetWidth"
+        );
+
+        rerender(
+            <Truncate ref={truncateRef} width={150}>
+                Updated text
+            </Truncate>
+        );
+
+        expect(forceUpdate).toHaveBeenCalledTimes(1);
+        expect(calcTargetWidth).toHaveBeenCalledTimes(1);
+        expect(truncateRef.current.state.targetWidth).toBe(150);
+    });
+
+    test("removes resize listeners and cancels animation frames on unmount", () => {
+        const truncateRef = React.createRef();
+        const cancelAnimationFrame = vi.fn();
+        vi.stubGlobal("cancelAnimationFrame", cancelAnimationFrame);
+        const removeEventListener = vi.spyOn(window, "removeEventListener");
+        const { unmount } = render(
+            <Truncate ref={truncateRef} width={100}>
+                Short text
+            </Truncate>
+        );
+        const instance = truncateRef.current;
+
+        instance.elements.ellipsis.remove();
+        unmount();
+
+        expect(removeEventListener).toHaveBeenCalledWith(
+            "resize",
+            instance.onResize
+        );
+        expect(cancelAnimationFrame).toHaveBeenCalledWith(instance.timeout);
+    });
+
     test("getLines renders complete text without truncation", () => {
         const truncate = new Truncate({
             children: "",
@@ -457,6 +618,57 @@ describe("Truncate internals", () => {
 
         const lines = truncate.getLines();
         expect(lines).toHaveLength(1);
+        expect(truncate.onTruncate).toHaveBeenCalledWith(true);
+    });
+
+    test("getLines wraps complete words before truncating the last line", () => {
+        const truncate = new Truncate({
+            children: "",
+            ellipsis: "...",
+            lines: 2,
+            trimWhitespace: false,
+            width: 40,
+        });
+        const text = document.createElement("span");
+        text.textContent = "one two three";
+        const ellipsis = document.createElement("span");
+        Object.defineProperty(ellipsis, "offsetWidth", { value: 7 });
+        truncate.elements = { text, ellipsis };
+        truncate.state = { targetWidth: 40 };
+        truncate.measureWidth = (value) => value.length * 7;
+        truncate.onTruncate = vi.fn();
+
+        const lines = truncate.getLines();
+
+        expect(lines).toHaveLength(2);
+        expect(lines[0][0].props.children.props.dangerouslySetInnerHTML.__html)
+            .toBe("one");
+        expect(lines[0][1].type).toBe("br");
+        expect(lines[1].props.children.props.children[1]).toBe("...");
+        expect(truncate.onTruncate).toHaveBeenCalledWith(true);
+    });
+
+    test("moves an unbreakable first word to the final truncation line", () => {
+        const truncate = new Truncate({
+            children: "",
+            ellipsis: "...",
+            lines: 2,
+            trimWhitespace: false,
+            width: 40,
+        });
+        const text = document.createElement("span");
+        text.textContent = "unbreakable word";
+        const ellipsis = document.createElement("span");
+        Object.defineProperty(ellipsis, "offsetWidth", { value: 10 });
+        truncate.elements = { text, ellipsis };
+        truncate.state = { targetWidth: 40 };
+        truncate.measureWidth = (value) => value.length * 10;
+        truncate.onTruncate = vi.fn();
+
+        const lines = truncate.getLines();
+
+        expect(lines).toHaveLength(1);
+        expect(lines[0].props.children.props.children[1]).toBe("...");
         expect(truncate.onTruncate).toHaveBeenCalledWith(true);
     });
 
