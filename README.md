@@ -2,7 +2,7 @@
 
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
-[![Build status][travis-image]][travis-url]
+[![Build status][github-build-image]][github-build-url]
 
 The text surrounded by the component will be truncated. Anything surrounded by the component could be evaluated as text. The component react-show-more-text/ShowMoreText is fork of react-show-more/ShowMore, applied improvements, added onClick event, works with React React 18.x.x, Next.Js 13.3.x and upper.
 
@@ -163,5 +163,5 @@ $ npm run build-storybook
 [npm-url]: https://npmjs.org/package/react-show-more-text
 [downloads-image]: http://img.shields.io/npm/dm/react-show-more-text.svg
 [npm-image]: https://badge.fury.io/js/react-show-more-text.svg
-[travis-url]: https://app.travis-ci.com/github/devzonetech/react-show-more-text
-[travis-image]: https://travis-ci.com/devzonetech/react-show-more-text.svg?branch=master
+[github-build-url]: https://github.com/devzonetech/react-show-more-text/actions/workflows/node.js.yml
+[github-build-image]: https://github.com/devzonetech/react-show-more-text/actions/workflows/node.js.yml/badge.svg

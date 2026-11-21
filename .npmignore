@@ -9,5 +9,4 @@ jest.config.js
 .nyc_output
 README.md
 CHANGELOG.md
-.travis.yml
 .npmrc

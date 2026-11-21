@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [NEXT]
 
+### Added
+- Github builds via actions/workflows
+
+### Removed
+ - Travis builds
+
 ## [1.7.3] - 2026-11.19
 
 ### Fixed

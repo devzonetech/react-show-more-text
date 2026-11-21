@@ -1,9 +1,0 @@
-language: node_js
-node_js:
-  - "16"
-before_install:
-  - npm i -g npm@8.19.2
-script: "npm run travis"
-env:
-  - CXX=g++-4.8
-after_success: npm run report-coverage

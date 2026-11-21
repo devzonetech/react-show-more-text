@@ -27,8 +27,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "vitest",
-    "test:watch": "vitest --watch",
-    "travis": "npm run build && npm run test"
+    "test:watch": "vitest --watch"
   },
   "repository": {
     "type": "git",
