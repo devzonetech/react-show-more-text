@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Github builds via actions/workflows
 - [#35](https://github.com/devzonetech/react-show-more-text/issues/35) Animation on expand and collapse
+- [#88](https://github.com/devzonetech/react-show-more-text/issues/88) Accessible button toggle with expanded/controls ARIA attributes and visible keyboard focus styles
 
 ### Fixed
 - [#55](https://github.com/devzonetech/react-show-more-text/issues/55) Escape truncated content and prevent unsafe links from being restored as HTML
