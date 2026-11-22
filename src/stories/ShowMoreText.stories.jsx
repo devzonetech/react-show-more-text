@@ -145,6 +145,29 @@ RichEditorStyles.args = {
     expanded: false,
 };
 
+const htmlContent =
+    "<p><strong>HTML-backed content</strong> can include formatted text and links. " +
+    "<em>This content is provided with dangerouslySetInnerHTML</em>, so only use " +
+    "trusted or sanitized HTML. The component truncates the rendered content to " +
+    "the configured number of lines and lets readers expand it to see the rest.</p>" +
+    "<p>Additional content demonstrates the expanded state, including " +
+    "<a href=\"https://react.dev/\">a link</a> and more text to continue the example.</p>";
+
+export const DangerousHtml = (args) => (
+    <div style={{ maxWidth: "450px", margin: "0 auto", padding: "20px" }}>
+        <ShowMoreText
+            {...args}
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
+    </div>
+);
+DangerousHtml.args = {
+    lines: 2,
+    more: "Show more",
+    less: "Show less",
+    expanded: false,
+};
+
 export const TruncatedAt2Lines = Template.bind({});
 TruncatedAt2Lines.args = {
     lines: 2,

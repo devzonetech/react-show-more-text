@@ -87,6 +87,7 @@ class Foo extends Component {
 | ------------------------ | ------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | lines                    | integer, boolean {false} | 3           | Specifies how many lines of text should be preserved until it gets truncated. `false` and any integer < 1 will result in the text not getting clipped at all. | (`false`, `-1`, `0`), `1`, ...                                                                                                |
 | children                 | string, React node       |             | The content to be truncated. String children are rendered as text (HTML is escaped). When React element children fit within the configured lines, their event handlers are preserved. Truncated links only retain `http`, `https`, `mailto`, and `tel` URLs. | `'Some text'`, `<p>Some paragraph <a/>with other text-based inline elements<a></p>`, `<span>Some</span><span>siblings</span>` |
+| dangerouslySetInnerHTML  | object                   |             | Renders trusted or sanitized HTML as the content to be truncated. Cannot be used together with `children`. | `dangerouslySetInnerHTML={{ __html: sanitizedHtml }}` |
 | more                     | string, React node       | 'Show more' | The text to display in the button to show more.                                                                                                               | `'Show more'`, `<span>Show more</span>`                                                                                       |
 | less                     | string, React node       | 'Show less' | The text to display in the button to show less.                                                                                                               | `'Show less'`, `<span>Show less</span>`                                                                                       |
 | className                | string                   | ''          | Class name(s) to add on component content wrapper div.                                                                                                        | `'wrapper-class'`, `'wrapper-class-1 wrapper-class-2'`                                                                        |
@@ -147,6 +148,16 @@ as `<strong>`, `<em>`, `<u>`, mentions, links, and elements with `className` or 
 ```
 
 String children remain plain text and HTML-like strings are escaped for security.
+
+To render HTML, pass it through `dangerouslySetInnerHTML`. Only use trusted or
+sanitized HTML, and do not pass `children` at the same time:
+
+```jsx
+<ShowMoreText
+  lines={3}
+  dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+/>
+```
 
 ## Developing
 

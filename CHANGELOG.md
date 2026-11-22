@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 ## [NEXT]
 
 ### Added
-- Github builds via actions/workflows
+- [link](https://github.com/devzonetech/react-show-more-text/actions) Github builds via actions/workflows
 - [#35](https://github.com/devzonetech/react-show-more-text/issues/35) Animation on expand and collapse
 - [#88](https://github.com/devzonetech/react-show-more-text/issues/88) Accessible button toggle with expanded/controls ARIA attributes and visible keyboard focus styles
 
 ### Fixed
+- [#39](https://github.com/devzonetech/react-show-more-text/issues/39) Support truncation of content passed through `dangerouslySetInnerHTML`
 - [#55](https://github.com/devzonetech/react-show-more-text/issues/55) Escape truncated content and prevent unsafe links from being restored as HTML
 - [#50](https://github.com/devzonetech/react-show-more-text/issues/50) Preserve event handlers on React child components when their content fits within the configured lines
 - [#5](https://github.com/devzonetech/react-show-more-text/issues/5) Wrap CJK text at character boundaries when it contains no spaces

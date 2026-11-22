@@ -31,6 +31,9 @@ class ShowMoreTextComponent extends Component {
 
     static propTypes = {
         children: PropTypes.node,
+        dangerouslySetInnerHTML: PropTypes.shape({
+            __html: PropTypes.any,
+        }),
         lines: PropTypes.number,
         more: PropTypes.node,
         less: PropTypes.node,
@@ -135,6 +138,7 @@ class ShowMoreTextComponent extends Component {
     render() {
         const {
             children,
+            dangerouslySetInnerHTML,
             more,
             less,
             lines,
@@ -149,7 +153,19 @@ class ShowMoreTextComponent extends Component {
             animate,
         } = this.props;
 
+        if (dangerouslySetInnerHTML != null && children != null) {
+            throw new Error(
+                "ShowMoreText cannot receive both children and dangerouslySetInnerHTML."
+            );
+        }
+
         const { expanded, truncated } = this.state;
+        const content =
+            dangerouslySetInnerHTML != null ? (
+                <span dangerouslySetInnerHTML={dangerouslySetInnerHTML} />
+            ) : (
+                children
+            );
         const toggleClassName = `show-more-less-button ${anchorClass}`;
         const toggleStyle = {
             appearance: "none",
@@ -205,8 +221,8 @@ class ShowMoreTextComponent extends Component {
                         }
                         ref={(ref) => (this.truncateRef = ref)}
                     >
-                        {keepNewLines && typeof children === "string"
-                            ? children.split("\n").map((line, i, arr) => {
+                        {keepNewLines && typeof content === "string"
+                            ? content.split("\n").map((line, i, arr) => {
                                   line = <span key={i}>{line}</span>;
 
                                   if (i === arr.length - 1) {
@@ -215,7 +231,7 @@ class ShowMoreTextComponent extends Component {
                                       return [line, <br key={i + "br"} />];
                                   }
                               })
-                            : children}
+                            : content}
                         {!truncated && expanded && (
                             <span>
                                 {" "}

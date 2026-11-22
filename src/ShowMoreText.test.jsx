@@ -96,6 +96,28 @@ describe("Component ShowMoreText", () => {
         expect(content).toBeTruthy();
     });
 
+    test("truncates content passed with dangerouslySetInnerHTML", () => {
+        const { container, getByRole } = render(
+            <ShowMoreText
+                lines={1}
+                width={70}
+                dangerouslySetInnerHTML={{
+                    __html: "<strong>Formatted content that should be truncated</strong>",
+                }}
+            />
+        );
+
+        expect(container.querySelector("strong").textContent).toBe(
+            "Formatted content that should be truncated"
+        );
+        expect(getByRole("button", { name: "Show more" })).toBeTruthy();
+
+        fireEvent.click(getByRole("button", { name: "Show more" }));
+
+        expect(container.querySelector("strong")).toBeTruthy();
+        expect(getByRole("button", { name: "Show less" })).toBeTruthy();
+    });
+
     test("calls onClick handler when anchor is clicked", () => {
         let clickCount = 0;
         const onClickHandler = () => {
