@@ -172,12 +172,21 @@ npm install
 npm run storybook
 ```
 
+Run the end-to-end suite in Chromium (install the browser once per environment):
+
+```sh
+npx playwright install chromium
+npm run test:e2e
+```
+
 Useful project scripts:
 
 | Command | Description |
 | --- | --- |
 | `npm test -- --run` | Run the unit tests once. |
 | `npm run test:types` | Check the TypeScript usage tests. |
+| `npm run test:e2e` | Run the Playwright end-to-end tests in Chromium. |
+| `npx playwright install chromium` | Install the browser used by the end-to-end tests. |
 | `npm run lint` | Lint the source files. |
 | `npm run build` | Build the ESM and CommonJS bundles and copy type declarations. |
 | `npm run build-storybook` | Build the static Storybook site. |

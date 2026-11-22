@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - [link](https://github.com/devzonetech/react-show-more-text/actions) Github builds via actions/workflows
+- Playwright end-to-end tests for component features, with Chromium execution in CI.
 - [#35](https://github.com/devzonetech/react-show-more-text/issues/35) Animation on expand and collapse
 - [#88](https://github.com/devzonetech/react-show-more-text/issues/88) Accessible button toggle with expanded/controls ARIA attributes and visible keyboard focus styles
 - [#90](https://github.com/devzonetech/react-show-more-text/issues/90) Native TypeScript support with package declarations in `dist/index.d.ts`, direct type exports, and a usage example.

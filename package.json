@@ -26,6 +26,8 @@
     "report-coverage": "npm run coverage && coveralls < coverage/lcov.info",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "test:e2e": "playwright test",
+    "test:e2e:server": "vite --config e2e/vite.config.js",
     "test": "vitest",
     "test:types": "tsc --noEmit -p tsconfig.types.json",
     "test:watch": "vitest --watch"
@@ -58,6 +60,7 @@
     "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
     "@storybook/react-vite": "8.6.19",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
