@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - [link](https://github.com/devzonetech/react-show-more-text/actions) Github builds via actions/workflows
 - [#35](https://github.com/devzonetech/react-show-more-text/issues/35) Animation on expand and collapse
 - [#88](https://github.com/devzonetech/react-show-more-text/issues/88) Accessible button toggle with expanded/controls ARIA attributes and visible keyboard focus styles
+- [#90](https://github.com/devzonetech/react-show-more-text/issues/90) Native TypeScript support with package declarations in `dist/index.d.ts`, direct type exports, and a usage example.
 
 ### Fixed
 - [#39](https://github.com/devzonetech/react-show-more-text/issues/39) Support truncation of content passed through `dangerouslySetInnerHTML`
