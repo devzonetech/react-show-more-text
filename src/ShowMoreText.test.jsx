@@ -172,6 +172,72 @@ describe("Component ShowMoreText", () => {
         expect(updatedAnchor).toBeTruthy();
     });
 
+    test("animates height on expand and collapse when enabled", () => {
+        const ref = React.createRef();
+        const { container } = render(
+            <ShowMoreText ref={ref} animate lines={1}>
+                {testMessage}
+            </ShowMoreText>
+        );
+        const content = container.querySelector(".show-more-text-content");
+        let frameCallback;
+
+        Object.defineProperty(content, "scrollHeight", {
+            configurable: true,
+            get: () => (ref.current.state.expanded ? 120 : 40),
+        });
+        vi.spyOn(content, "getBoundingClientRect").mockImplementation(() => ({
+            height: ref.current.state.expanded ? 120 : 40,
+        }));
+        vi.spyOn(window, "requestAnimationFrame").mockImplementation((callback) => {
+            frameCallback = callback;
+            return 1;
+        });
+
+        expect(content.style.transition).toBe("height 300ms ease");
+        fireEvent.click(container.querySelector(".show-more-less-clickable"));
+        act(() => frameCallback());
+
+        expect(content.style.height).toBe("120px");
+        fireEvent.transitionEnd(content, { propertyName: "height" });
+        expect(content.style.height).toBe("auto");
+        expect(content.style.overflow).toBe("");
+
+        fireEvent.click(
+            Array.from(container.querySelectorAll(".show-more-less-clickable")).find(
+                (anchor) => anchor.textContent === "Show less"
+            )
+        );
+        act(() => frameCallback());
+
+        expect(content.style.height).toBe("40px");
+        fireEvent.transitionEnd(content, { propertyName: "height" });
+        expect(content.style.height).toBe("auto");
+    });
+
+    test("does not animate by default or when reduced motion is requested", () => {
+        const { container, rerender } = render(
+            <ShowMoreText lines={1}>{testMessage}</ShowMoreText>
+        );
+        let content = container.querySelector(".show-more-text-content");
+
+        expect(content.style.transition).toBe("");
+        fireEvent.click(container.querySelector(".show-more-less-clickable"));
+        expect(content.style.height).toBe("");
+
+        vi.stubGlobal("matchMedia", () => ({ matches: true }));
+        rerender(
+            <ShowMoreText animate lines={1}>
+                {testMessage}
+            </ShowMoreText>
+        );
+        content = container.querySelector(".show-more-text-content");
+        fireEvent.click(container.querySelector(".show-more-less-clickable"));
+
+        expect(content.style.transition).toBe("height 300ms ease");
+        expect(content.style.height).toBe("");
+    });
+
     test("expands and collapses rich React formatting", async () => {
         const { container } = render(
             <ShowMoreText lines={1} width={100}>

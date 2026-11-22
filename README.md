@@ -44,6 +44,7 @@ class Foo extends Component {
                 anchorClass="show-more-less-clickable"
                 onClick={this.executeOnClick}
                 expanded={false}
+                animate={true}
                 width={280}
                 truncatedEndingComponent={"... "}
             >
@@ -91,6 +92,7 @@ class Foo extends Component {
 | anchorClass              | string                   | 'show-more-less-clickable'          | Class name(s) to add to the anchor elements. Should be the name of a css class defined globally by you.                                                                                                                  | `'my-anchor-class'`, `'class-1 class-2'`                                                                                      |
 | onClick                  | Function                 |             | Function executed on click on 'Show more' or 'Show less'                                                                                                      | `onClick={this.executeOnClick}`                                                                                               |
 | expanded                 | boolean                  | 'false'     | Control the text to be shown as expanded                                                                                                                      | `expanded={true}`                                                                                                             |
+| animate                  | boolean                  | 'false'     | Animate the height when expanding or collapsing. Respects the user's reduced-motion preference.                                                                | `animate={true}`                                                                                                              |
 | expandByClick            | boolean                  | 'true'      | Cancel the default anchor click expand behavior                                                                                                               | `expandByClick={false}`                                                                                                       |
 | width                    | number                   | `0`         | If not `0`, the calculation of the content will be based on this number.                                                                                      |                                                                                                                               |
 | keepNewLines             | boolean                  | 'false'     | Controls the new lines in text to be kept or not. When set to true, only strings can be passed in as children, and not html nodes.                            | `keepNewLines={true}`                                                                                                         |
