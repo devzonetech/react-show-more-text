@@ -14,10 +14,65 @@ afterEach(() => {
 
 describe("Component ShowMoreText", () => {
     test("renders with default props", () => {
-        const { container } = render(<ShowMoreText>{testMessage}</ShowMoreText>);
-        const anchor = container.querySelector('.show-more-less-clickable');
-        expect(anchor).toBeTruthy();
-        expect(anchor.textContent).toBe('Show more');
+        const { getByRole } = render(<ShowMoreText>{testMessage}</ShowMoreText>);
+        const button = getByRole("button", { hidden: true });
+        expect(button).toBeTruthy();
+        expect(button.type).toBe("button");
+        expect(button.textContent).toBe("Show more");
+        expect(button.getAttribute("aria-expanded")).toBe("false");
+        expect(button.getAttribute("aria-controls")).toBeTruthy();
+        expect(button.classList.contains("show-more-less-clickable")).toBe(true);
+    });
+
+    test("uses unique content ids and updates expanded state when toggled", () => {
+        const { getAllByRole, container } = render(
+            <>
+                <ShowMoreText>{testMessage}</ShowMoreText>
+                <ShowMoreText>{testMessage}</ShowMoreText>
+            </>
+        );
+        const buttons = getAllByRole("button", { hidden: true });
+        const contentIds = Array.from(
+            container.querySelectorAll(".show-more-text-content")
+        ).map((content) => content.id);
+
+        expect(new Set(contentIds).size).toBe(2);
+        buttons.forEach((button, index) => {
+            expect(button.getAttribute("aria-controls")).toBe(contentIds[index]);
+            expect(button.getAttribute("aria-expanded")).toBe("false");
+        });
+
+        fireEvent.click(buttons[0]);
+
+        const showLessButton = getAllByRole("button", { hidden: true })[0];
+        expect(showLessButton.textContent).toBe("Show less");
+        expect(showLessButton.getAttribute("aria-controls")).toBe(contentIds[0]);
+        expect(showLessButton.getAttribute("aria-expanded")).toBe("true");
+    });
+
+    test("supports a custom content id and accessible toggle label", () => {
+        const { getByRole } = render(
+            <ShowMoreText id="article-summary" aria-label="Toggle article summary">
+                {testMessage}
+            </ShowMoreText>
+        );
+        const button = getByRole("button", { hidden: true });
+
+        expect(button.getAttribute("aria-controls")).toBe("article-summary");
+        expect(button.getAttribute("aria-label")).toBe("Toggle article summary");
+    });
+
+    test("toggle button is keyboard-focusable and displays a focus indicator", () => {
+        const { getByRole } = render(<ShowMoreText>{testMessage}</ShowMoreText>);
+        const button = getByRole("button", { hidden: true });
+
+        expect(button.tabIndex).toBe(0);
+        fireEvent.focus(button);
+        expect(button.style.outline).toBe("2px solid currentColor");
+        expect(button.style.outlineOffset).toBe("2px");
+
+        fireEvent.blur(button);
+        expect(button.style.outline).toBe("");
     });
 
     test("shows full text when expanded", () => {
@@ -426,12 +481,11 @@ describe("Component ShowMoreText", () => {
             </ShowMoreText>
         );
         const instance = ref.current;
-        const event = { preventDefault: vi.fn() };
+        const event = {};
 
         unmount();
         instance.toggleLines(event);
 
-        expect(event.preventDefault).toHaveBeenCalled();
         expect(onClick).not.toHaveBeenCalled();
         expect(instance.state.expanded).toBe(false);
     });

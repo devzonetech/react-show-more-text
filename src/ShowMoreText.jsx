@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { PropTypes } from "prop-types";
 import Truncate from "./Truncate";
 
-class ShowMoreText extends Component {
+class ShowMoreTextComponent extends Component {
     _isMounted = false;
 
     constructor(props) {
@@ -77,7 +77,6 @@ class ShowMoreText extends Component {
     };
 
     toggleLines = (event) => {
-        event.preventDefault();
         var _self = this;
 
         if (!_self.props.expandByClick) {
@@ -123,6 +122,16 @@ class ShowMoreText extends Component {
         }
     };
 
+    handleToggleFocus = (event) => {
+        event.currentTarget.style.outline = "2px solid currentColor";
+        event.currentTarget.style.outlineOffset = "2px";
+    };
+
+    handleToggleBlur = (event) => {
+        event.currentTarget.style.outline = "";
+        event.currentTarget.style.outlineOffset = "";
+    };
+
     render() {
         const {
             children,
@@ -131,6 +140,8 @@ class ShowMoreText extends Component {
             lines,
             anchorClass,
             className,
+            id,
+            "aria-label": ariaLabel,
             width,
             keepNewLines,
             truncatedEndingComponent,
@@ -139,10 +150,21 @@ class ShowMoreText extends Component {
         } = this.props;
 
         const { expanded, truncated } = this.state;
+        const toggleClassName = `show-more-less-button ${anchorClass}`;
+        const toggleStyle = {
+            appearance: "none",
+            background: "none",
+            border: 0,
+            color: "inherit",
+            cursor: "pointer",
+            font: "inherit",
+            padding: 0,
+        };
 
         return (
             <div className={className}>
                 <div
+                    id={id}
                     className="show-more-text-content"
                     ref={(ref) => (this.contentRef = ref)}
                     style={animate ? { transition: "height 300ms ease" } : undefined}
@@ -163,12 +185,19 @@ class ShowMoreText extends Component {
                         ellipsis={
                             <span>
                                 {truncatedEndingComponent}
-                                <span
-                                    className={anchorClass}
+                                <button
+                                    type="button"
+                                    className={toggleClassName}
+                                    aria-expanded={expanded}
+                                    aria-controls={id}
+                                    aria-label={ariaLabel}
+                                    style={toggleStyle}
                                     onClick={this.toggleLines}
+                                    onFocus={this.handleToggleFocus}
+                                    onBlur={this.handleToggleBlur}
                                 >
                                     {more}
-                                </span>
+                                </button>
                             </span>
                         }
                         onTruncate={(truncated) =>
@@ -190,12 +219,19 @@ class ShowMoreText extends Component {
                         {!truncated && expanded && (
                             <span>
                                 {" "}
-                                <span
-                                    className={anchorClass}
+                                <button
+                                    type="button"
+                                    className={toggleClassName}
+                                    aria-expanded={expanded}
+                                    aria-controls={id}
+                                    aria-label={ariaLabel}
+                                    style={toggleStyle}
                                     onClick={this.toggleLines}
+                                    onFocus={this.handleToggleFocus}
+                                    onBlur={this.handleToggleBlur}
                                 >
                                     {less}
-                                </span>
+                                </button>
                             </span>
                         )}
                     </Truncate>
@@ -204,5 +240,25 @@ class ShowMoreText extends Component {
         );
     }
 }
+
+ShowMoreTextComponent.propTypes = {
+    ...ShowMoreTextComponent.propTypes,
+    id: PropTypes.string,
+    "aria-label": PropTypes.string,
+};
+
+const ShowMoreText = React.forwardRef(function ShowMoreText(props, ref) {
+    const generatedId = React.useId();
+
+    return (
+        <ShowMoreTextComponent
+            {...props}
+            id={props.id || generatedId}
+            ref={ref}
+        />
+    );
+});
+
+ShowMoreText.propTypes = ShowMoreTextComponent.propTypes;
 
 export default ShowMoreText;
