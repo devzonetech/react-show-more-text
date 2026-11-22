@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 - [#35](https://github.com/devzonetech/react-show-more-text/issues/35) Animation on expand and collapse
 - [#88](https://github.com/devzonetech/react-show-more-text/issues/88) Accessible button toggle with expanded/controls ARIA attributes and visible keyboard focus styles
 - [#90](https://github.com/devzonetech/react-show-more-text/issues/90) Native TypeScript support with package declarations in `dist/index.d.ts`, direct type exports, and a usage example.
+- [#92](https://github.com/devzonetech/react-show-more-text/issues/92) test: implement consumer installation and React compatibility tests
+
+
 
 ### Fixed
 - Ensure the ESM and CommonJS package entry points resolve correctly for consumers.
@@ -22,6 +25,7 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
  - Travis builds
+ - example and example-react-19 projects used for manual Consumer Installation Tests 
 
 ## [1.7.3] - 2026-11.19
 
