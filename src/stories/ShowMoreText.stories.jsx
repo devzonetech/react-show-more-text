@@ -21,6 +21,9 @@ export default {
         expanded: {
             control: "boolean",
         },
+        animate: {
+            control: "boolean",
+        },
     },
 };
 
@@ -60,6 +63,16 @@ Default.args = {
     more: "Show more",
     less: "Show less",
     expanded: false,
+    animate: false,
+};
+
+export const AnimatedExpandCollapse = Template.bind({});
+AnimatedExpandCollapse.args = {
+    lines: 2,
+    more: "Show more",
+    less: "Show less",
+    expanded: false,
+    animate: true,
 };
 
 export const JapaneseText = (args) => (

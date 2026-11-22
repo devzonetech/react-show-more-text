@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Github builds via actions/workflows
+- [#35](https://github.com/devzonetech/react-show-more-text/issues/35) Animation on expand and collapse
 
 ### Fixed
 - [#55](https://github.com/devzonetech/react-show-more-text/issues/55) Escape truncated content and prevent unsafe links from being restored as HTML
