@@ -19,7 +19,7 @@ export default defineConfig({
         },
         {
           format: "cjs",
-          entryFileNames: "index.cjs.js",
+          entryFileNames: "index.cjs",
           dir: "dist",
         },
       ],

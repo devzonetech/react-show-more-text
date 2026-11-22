@@ -179,12 +179,31 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
+### Consumer installation tests
+
+The consumer installation suite builds and packs the library, then installs that
+`.tgz` artifact into four independent applications: React 18 and React 19, each
+tested with JavaScript and strict TypeScript. Each fixture verifies package
+imports and peer dependencies, builds a production bundle, and TypeScript
+fixtures also run `tsc --noEmit` with declaration checking enabled.
+
+Run all consumer tests locally with the repository's development dependencies
+installed:
+
+```sh
+npm run test:consumer
+```
+
+GitHub Actions also runs each fixture independently on pushes, pull requests,
+and manual dispatches.
+
 Useful project scripts:
 
 | Command | Description |
 | --- | --- |
 | `npm test -- --run` | Run the unit tests once. |
 | `npm run test:types` | Check the TypeScript usage tests. |
+| `npm run test:consumer` | Pack the library and test installation, imports, and builds in all four consumer fixtures. |
 | `npm run test:e2e` | Run the Playwright end-to-end tests in Chromium. |
 | `npx playwright install chromium` | Install the browser used by the end-to-end tests. |
 | `npm run lint` | Lint the source files. |

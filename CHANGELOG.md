@@ -5,12 +5,14 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - [link](https://github.com/devzonetech/react-show-more-text/actions) Github builds via actions/workflows
+- Automated npm artifact installation and compatibility tests for React 18/19 JavaScript and TypeScript consumers.
 - Playwright end-to-end tests for component features, with Chromium execution in CI.
 - [#35](https://github.com/devzonetech/react-show-more-text/issues/35) Animation on expand and collapse
 - [#88](https://github.com/devzonetech/react-show-more-text/issues/88) Accessible button toggle with expanded/controls ARIA attributes and visible keyboard focus styles
 - [#90](https://github.com/devzonetech/react-show-more-text/issues/90) Native TypeScript support with package declarations in `dist/index.d.ts`, direct type exports, and a usage example.
 
 ### Fixed
+- Ensure the ESM and CommonJS package entry points resolve correctly for consumers.
 - [#39](https://github.com/devzonetech/react-show-more-text/issues/39) Support truncation of content passed through `dangerouslySetInnerHTML`
 - [#55](https://github.com/devzonetech/react-show-more-text/issues/55) Escape truncated content and prevent unsafe links from being restored as HTML
 - [#50](https://github.com/devzonetech/react-show-more-text/issues/50) Preserve event handlers on React child components when their content fits within the configured lines

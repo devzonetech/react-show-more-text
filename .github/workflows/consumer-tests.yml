@@ -1,0 +1,47 @@
+name: Consumer installation tests
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.21.0
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: mkdir -p consumer-package && npm pack --pack-destination consumer-package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: consumer-package
+          path: consumer-package/*.tgz
+          if-no-files-found: error
+          retention-days: 1
+
+  consumers:
+    needs: package
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        react: [18, 19]
+        language: [javascript, typescript]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.21.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: consumer-package
+          path: test/consumer/package
+      - name: Install and test React ${{ matrix.react }} / ${{ matrix.language }}
+        run: node test/consumer/run.mjs --package test/consumer/package react${{ matrix.react }}-${{ matrix.language }}
