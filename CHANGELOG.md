@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [NEXT]
 
+## [1.8.0] - 2026-11.22
+
 ### Added
 - [link](https://github.com/devzonetech/react-show-more-text/actions) Github builds via actions/workflows
 - Automated npm artifact installation and compatibility tests for React 18/19 JavaScript and TypeScript consumers.

@@ -1,6 +1,6 @@
 {
   "name": "react-show-more-text",
-  "version": "1.8.0-rc.1",
+  "version": "1.8.0",
   "type": "module",
   "description": "The text surrounded by the component will be truncated. Anything surrounded by the component could be evaluated as text. The component react-show-more-text/ShowMoreText is fork of react-show-more/ShowMore, applied improvements, works with React 16.x.x, added onClick event.",
   "main": "dist/index.cjs",
