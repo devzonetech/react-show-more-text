@@ -466,6 +466,24 @@ export default class Truncate extends React.Component {
 
         onTruncate(didTruncate);
 
+        if (didTruncate && typeof children !== "string") {
+            return (
+                <React.Fragment>
+                    <span
+                        style={{
+                            display: "-webkit-box",
+                            WebkitBoxOrient: "vertical",
+                            WebkitLineClamp: numLines,
+                            overflow: "hidden",
+                        }}
+                    >
+                        {children}
+                    </span>
+                    {ellipsis}
+                </React.Fragment>
+            );
+        }
+
         if (!didTruncate && typeof children !== "string") {
             return children;
         }
