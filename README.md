@@ -4,7 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/react-show-more-text.svg)](https://www.npmjs.com/package/react-show-more-text)
 [![Build status](https://github.com/devzonetech/react-show-more-text/actions/workflows/node.js.yml/badge.svg)](https://github.com/devzonetech/react-show-more-text/actions/workflows/node.js.yml)
 [![License](https://img.shields.io/npm/l/react-show-more-text.svg)](https://github.com/devzonetech/react-show-more-text/blob/main/LICENSE)
-<!-- [![TypeScript](https://img.shields.io/npm/types/react-show-more-text.svg)](https://www.npmjs.com/package/react-show-more-text) -->
+[![TypeScript](https://img.shields.io/npm/types/react-show-more-text.svg)](https://www.npmjs.com/package/react-show-more-text)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/react-show-more-text)](https://bundlephobia.com/package/react-show-more-text)
 
 
@@ -79,6 +79,32 @@ class Foo extends Component {
         );
     }
 }
+```
+
+## TypeScript
+
+The package includes declarations and supports both the default and named exports:
+
+```tsx
+import ShowMoreText, {
+    ShowMoreText as NamedShowMoreText,
+    type ShowMoreTextProps,
+} from "react-show-more-text";
+
+const props: ShowMoreTextProps = {
+    lines: 3,
+    more: "Show more",
+    less: "Show less",
+    expanded: false,
+};
+
+<ShowMoreText {...props}>
+    Typed React content
+</ShowMoreText>;
+
+<NamedShowMoreText
+    dangerouslySetInnerHTML={{ __html: "<strong>Trusted HTML</strong>" }}
+/>;
 ```
 
 ## API
