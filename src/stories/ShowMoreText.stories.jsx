@@ -98,6 +98,40 @@ ResizableContainerWidth.args = {
     expanded: false,
 };
 
+export const RichEditorStyles = (args) => (
+    <div style={{ maxWidth: "450px", margin: "0 auto", padding: "20px" }}>
+        <ShowMoreText {...args}>
+            <span>
+                <strong>Bold text</strong>{" "}
+                <em>italic text</em>{" "}
+                <u>underlined text</u>, and a{" "}
+                <span
+                    style={{
+                        color: "var(--storybook-rich-mention, #0969da)",
+                        fontWeight: "600",
+                    }}
+                >
+                    @mention
+                </span>
+                . This rich editor content keeps its formatting while truncated.
+                Additional text is included so the three-line limit is exercised.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+                qui officia deserunt mollit anim id est laborum.
+            </span>
+        </ShowMoreText>
+    </div>
+);
+RichEditorStyles.args = {
+    lines: 3,
+    more: "Show more",
+    less: "Show less",
+    expanded: false,
+};
+
 export const TruncatedAt2Lines = Template.bind({});
 TruncatedAt2Lines.args = {
     lines: 2,
@@ -153,7 +187,8 @@ export const WithInteractiveComponents = (args) => (
             and{" "}
             <InteractiveButton label="Click to save" clickedLabel="Saved" />.
             Their click handlers continue to work when the content fits within
-            the configured lines.
+            the configured lines. 
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </ShowMoreText>
     </div>
 );

@@ -1,8 +1,13 @@
 # React Show More Text 1.7.3
 
-[![NPM version][npm-image]][npm-url]
-[![Downloads][downloads-image]][npm-url]
-[![Build status][github-build-image]][github-build-url]
+[![NPM version](https://badge.fury.io/js/react-show-more-text.svg)](https://npmjs.org/package/react-show-more-text)
+[![npm downloads](https://img.shields.io/npm/dm/react-show-more-text.svg)](https://www.npmjs.com/package/react-show-more-text)
+[![Build status](https://github.com/devzonetech/react-show-more-text/actions/workflows/node.js.yml/badge.svg)](https://github.com/devzonetech/react-show-more-text/actions/workflows/node.js.yml)
+[![License](https://img.shields.io/npm/l/react-show-more-text.svg)](https://github.com/devzonetech/react-show-more-text/blob/main/LICENSE)
+<!-- [![TypeScript](https://img.shields.io/npm/types/react-show-more-text.svg)](https://www.npmjs.com/package/react-show-more-text) -->
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/react-show-more-text)](https://bundlephobia.com/package/react-show-more-text)
+
+
 
 The text surrounded by the component will be truncated. Anything surrounded by the component could be evaluated as text. The component react-show-more-text/ShowMoreText is fork of react-show-more/ShowMore, applied improvements, added onClick event, works with React React 18.x.x, Next.Js 13.3.x and upper.
 
@@ -92,6 +97,25 @@ class Foo extends Component {
 | truncatedEndingComponent | string                   | '...'       | Control the text to be shown at the end of short text                                                                                                         | `truncatedEndingComponent={'... '}`                                                                                           |
 | onTruncate               | Function                 | undefined   | Function executed on click on Truncate                                                                                                                        | `onTruncate={() => {alert('Turncated!')}}`                                                                                    |
 
+### Rich React content
+
+When `children` contains React elements, formatting and classes on inline elements are
+preserved in the collapsed view. This supports editor output containing elements such
+as `<strong>`, `<em>`, `<u>`, mentions, links, and elements with `className` or `style`.
+
+```jsx
+<ShowMoreText lines={3}>
+  <p>
+    <strong>Bold text</strong>{" "}
+    <em>Italic text</em>{" "}
+    <u>Underlined text</u>, and{" "}
+    <span className="mention">@Jane</span>.
+  </p>
+</ShowMoreText>
+```
+
+String children remain plain text and HTML-like strings are escaped for security.
+
 ## Developing
 
 Install development dependencies
@@ -159,9 +183,3 @@ Build static Storybook site
 ```
 $ npm run build-storybook
 ```
-
-[npm-url]: https://npmjs.org/package/react-show-more-text
-[downloads-image]: http://img.shields.io/npm/dm/react-show-more-text.svg
-[npm-image]: https://badge.fury.io/js/react-show-more-text.svg
-[github-build-url]: https://github.com/devzonetech/react-show-more-text/actions/workflows/node.js.yml
-[github-build-image]: https://github.com/devzonetech/react-show-more-text/actions/workflows/node.js.yml/badge.svg

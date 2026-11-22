@@ -172,6 +172,37 @@ describe("Component ShowMoreText", () => {
         expect(updatedAnchor).toBeTruthy();
     });
 
+    test("expands and collapses rich React formatting", async () => {
+        const { container } = render(
+            <ShowMoreText lines={1} width={100}>
+                <span>
+                    <strong>Bold opening</strong>{" "}
+                    <em>italic text</em>{" "}
+                    <span className="mention">@mention</span>{" "}
+                    with enough additional text to require truncation
+                </span>
+            </ShowMoreText>
+        );
+
+        await waitFor(() => {
+            expect(
+                container.querySelector(".show-more-less-clickable")
+            ).toBeTruthy();
+        });
+
+        fireEvent.click(container.querySelector(".show-more-less-clickable"));
+
+        await waitFor(() => {
+            expect(container.textContent).toContain("Show less");
+        });
+
+        fireEvent.click(container.querySelector(".show-more-less-clickable"));
+
+        await waitFor(() => {
+            expect(container.textContent).toContain("Show more");
+        });
+    });
+
     test("handles truncatedEndingComponent prop", () => {
         const { container } = render(
             <ShowMoreText expanded={false} truncatedEndingComponent={"..."}>
@@ -698,6 +729,42 @@ describe("Truncate internals", () => {
         expect(lines[0][1].type).toBe("br");
         expect(lines[1].props.children.props.children[1]).toBe("...");
         expect(truncate.onTruncate).toHaveBeenCalledWith(true);
+    });
+
+    test("preserves rich React formatting when truncating", () => {
+        const richChildren = (
+            <span>
+                <strong>Bold</strong>{" "}
+                <em>italic</em>{" "}
+                <u>underline</u>{" "}
+                <span className="mention">@mention</span>{" "}
+                and more text that needs truncation.
+            </span>
+        );
+        const truncate = new Truncate({
+            children: richChildren,
+            ellipsis: <b>Show more</b>,
+            lines: 2,
+            trimWhitespace: false,
+            width: 40,
+        });
+        const text = document.createElement("span");
+        text.appendChild(document.createElement("span")).textContent =
+            "Bold italic underline @mention and more text that needs truncation.";
+        const ellipsis = document.createElement("span");
+        Object.defineProperty(ellipsis, "offsetWidth", { value: 7 });
+        truncate.elements = { text, ellipsis };
+        truncate.state = { targetWidth: 40 };
+        truncate.measureWidth = (value) => value.length * 7;
+        truncate.onTruncate = vi.fn();
+
+        const result = truncate.getLines();
+
+        expect(result.type).toBe(React.Fragment);
+        expect(result.props.children[0].props.style.WebkitLineClamp).toBe(2);
+        expect(result.props.children[0].props.style.overflow).toBe("hidden");
+        expect(result.props.children[0].props.children).toBe(richChildren);
+        expect(result.props.children[1].props.children).toBe("Show more");
     });
 
     test("moves an unbreakable first word to the final truncation line", () => {

@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - [#50](https://github.com/devzonetech/react-show-more-text/issues/50) Preserve event handlers on React child components when their content fits within the configured lines
 - [#5](https://github.com/devzonetech/react-show-more-text/issues/5) Wrap CJK text at character boundaries when it contains no spaces
 - [#41](https://github.com/devzonetech/react-show-more-text/issues/41) Recalculate truncation when the container width changes
+- [#38](https://github.com/devzonetech/react-show-more-text/issues/38) Preserve rich React element formatting and classes in collapsed text
 
 ### Removed
  - Travis builds
