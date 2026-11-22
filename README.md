@@ -1,182 +1,158 @@
-# React Show More Text 1.7.3
+# React Show More Text
 
-[![NPM version](https://badge.fury.io/js/react-show-more-text.svg)](https://npmjs.org/package/react-show-more-text)
+[![npm version](https://badge.fury.io/js/react-show-more-text.svg)](https://www.npmjs.com/package/react-show-more-text)
 [![npm downloads](https://img.shields.io/npm/dm/react-show-more-text.svg)](https://www.npmjs.com/package/react-show-more-text)
 [![Build status](https://github.com/devzonetech/react-show-more-text/actions/workflows/node.js.yml/badge.svg)](https://github.com/devzonetech/react-show-more-text/actions/workflows/node.js.yml)
 [![License](https://img.shields.io/npm/l/react-show-more-text.svg)](https://github.com/devzonetech/react-show-more-text/blob/main/LICENSE)
 [![TypeScript](https://img.shields.io/npm/types/react-show-more-text.svg)](https://www.npmjs.com/package/react-show-more-text)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/react-show-more-text)](https://bundlephobia.com/package/react-show-more-text)
+[![Bundle size](https://img.shields.io/bundlephobia/minzip/react-show-more-text)](https://bundlephobia.com/package/react-show-more-text)
 
+**Keep long content readable without hiding the rest of the story.** `react-show-more-text` is a flexible React component for truncating text to a chosen number of lines and letting readers expand or collapse it on demand.
 
+Use it for article previews, comments, product descriptions, profiles, and anywhere a compact summary should stay just one click away from the full content.
 
-The text surrounded by the component will be truncated. Anything surrounded by the component could be evaluated as text. The component react-show-more-text/ShowMoreText is fork of react-show-more/ShowMore, applied improvements, added onClick event, works with React React 18.x.x, Next.Js 13.3.x and upper.
+- Works with **React 18 and 19**
+- Supports **JavaScript and TypeScript** with built-in declarations
+- Handles **plain text, rich React content, and trusted HTML**
+- Includes an **accessible, keyboard-operable toggle** with no stylesheet required
 
-## Demo
+[Live demo](https://www.devzonetech.com/demo/react-show-more-text/build/) · [Component stories](https://github.com/devzonetech/react-show-more-text/blob/main/src/stories/ShowMoreText.stories.jsx)
 
-[https://www.devzonetech.com/demo/react-show-more-text/build/](https://www.devzonetech.com/demo/react-show-more-text/build/)
+## Features
 
-## Install
+- **Line-based truncation:** Set how many lines to show, with automatic text measurement and a customizable ending.
+- **Responsive recalculation:** Reflows truncation when the container is resized; optionally provide a fixed width for measurement.
+- **Flexible content:** Render plain text, React elements, or trusted/sanitized HTML. React child formatting and classes are retained in the collapsed view.
+- **Configurable show-more/show-less controls:** Supply your own labels, React nodes, CSS classes, and accessible name.
+- **Expansion options:** Start expanded, animate expand/collapse, or disable expansion while still receiving toggle clicks.
+- **Callbacks:** Respond to toggle clicks and changes to whether content is truncated.
+- **Accessible by default:** Uses a native button with keyboard activation, visible focus styling, `aria-expanded`, and `aria-controls`.
+- **Reduced-motion friendly:** The optional height animation respects the user's reduced-motion preference.
+- **International text support:** Handles CJK text at character boundaries and can preserve newlines in string content.
+- **Safer truncated HTML links:** Restored links are limited to `http`, `https`, `mailto`, and `tel` URLs; new-tab links receive `noopener noreferrer`.
 
+## Installation
+
+```sh
+npm install react-show-more-text
 ```
-$ npm install react-show-more-text
-```
 
-## Usage
+React 18 or 19 is required as a peer dependency.
 
-```js
+## Quick start
+
+```jsx
 import ShowMoreText from "react-show-more-text";
 
-// ...
-
-class Foo extends Component {
-    executeOnClick(isExpanded) {
-        console.log(isExpanded);
-    }
-
-    render() {
-        return (
-            <ShowMoreText
-                /* Default options */
-                lines={3}
-                more="Show more"
-                less="Show less"
-                className="content-css"
-                anchorClass="show-more-less-clickable"
-                aria-label="Toggle article excerpt"
-                onClick={this.executeOnClick}
-                expanded={false}
-                animate={true}
-                width={280}
-                truncatedEndingComponent={"... "}
-            >
-                Lorem ipsum dolor sit amet, consectetur{" "}
-                <a
-                    href="https://www.yahoo.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    yahoo.com
-                </a>{" "}
-                adipiscing elit, sed do eiusmod tempor incididunt
-                <a
-                    href="https://www.google.bg/"
-                    title="Google"
-                    rel="nofollow"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    www.google.bg
-                </a> ut labore et dolore magna amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-            </ShowMoreText>
-        );
-    }
+export default function ArticlePreview() {
+  return (
+    <ShowMoreText
+      lines={3}
+      more="Read more"
+      less="Show less"
+      className="article-preview"
+    >
+      A longer article summary goes here. The component measures the content,
+      shows the configured number of lines, and adds a button so readers can
+      reveal the complete text when they want more detail.
+    </ShowMoreText>
+  );
 }
 ```
 
-## TypeScript
+The component needs no stylesheet import. Use `className` on the content wrapper and `anchorClass` on the toggle buttons to apply your own styles.
 
-The package includes declarations and supports both the default and named exports:
+### React content and links
+
+React elements can be passed as children, so inline formatting and links can be part of a preview:
+
+```jsx
+<ShowMoreText lines={3} more="Continue reading" less="Collapse">
+  Read the <strong>full story</strong> and visit{" "}
+  <a href="https://react.dev/">React</a> for more information.
+  Add enough content to exceed the configured line count.
+</ShowMoreText>
+```
+
+### TypeScript
+
+Type declarations are included. Both the default and named component exports are available:
 
 ```tsx
 import ShowMoreText, {
-    ShowMoreText as NamedShowMoreText,
-    type ShowMoreTextProps,
+  ShowMoreText as NamedShowMoreText,
+  type ShowMoreTextProps,
 } from "react-show-more-text";
 
-const props: ShowMoreTextProps = {
-    lines: 3,
-    more: "Show more",
-    less: "Show less",
-    expanded: false,
+const previewProps: ShowMoreTextProps = {
+  lines: 3,
+  more: "Show more",
+  less: "Show less",
 };
 
-<ShowMoreText {...props}>
-    Typed React content
-</ShowMoreText>;
-
-<NamedShowMoreText
-    dangerouslySetInnerHTML={{ __html: "<strong>Trusted HTML</strong>" }}
-/>;
+<ShowMoreText {...previewProps}>Typed React content</ShowMoreText>;
+<NamedShowMoreText lines={2}>Another typed preview</NamedShowMoreText>;
 ```
 
 ## API
 
-| Prop                     | Type                     | Default     | Description                                                                                                                                                   | Example                                                                                                                       |
-| ------------------------ | ------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| lines                    | integer, boolean {false} | 3           | Specifies how many lines of text should be preserved until it gets truncated. `false` and any integer < 1 will result in the text not getting clipped at all. | (`false`, `-1`, `0`), `1`, ...                                                                                                |
-| children                 | string, React node       |             | The content to be truncated. String children are rendered as text (HTML is escaped). When React element children fit within the configured lines, their event handlers are preserved. Truncated links only retain `http`, `https`, `mailto`, and `tel` URLs. | `'Some text'`, `<p>Some paragraph <a/>with other text-based inline elements<a></p>`, `<span>Some</span><span>siblings</span>` |
-| dangerouslySetInnerHTML  | object                   |             | Renders trusted or sanitized HTML as the content to be truncated. Cannot be used together with `children`. | `dangerouslySetInnerHTML={{ __html: sanitizedHtml }}` |
-| more                     | string, React node       | 'Show more' | The text to display in the button to show more.                                                                                                               | `'Show more'`, `<span>Show more</span>`                                                                                       |
-| less                     | string, React node       | 'Show less' | The text to display in the button to show less.                                                                                                               | `'Show less'`, `<span>Show less</span>`                                                                                       |
-| className                | string                   | ''          | Class name(s) to add on component content wrapper div.                                                                                                        | `'wrapper-class'`, `'wrapper-class-1 wrapper-class-2'`                                                                        |
-| id                       | string                   | Generated   | ID for the text content element controlled by the toggle button. A unique ID is generated when omitted.                                                       | `'article-summary'`                                                                                                           |
-| aria-label               | string                   |             | Optional accessible name for the toggle button. Its expanded state is conveyed separately through `aria-expanded`.                                            | `'Toggle article summary'`                                                                                                    |
-| anchorClass              | string                   | 'show-more-less-clickable'          | Class name(s) applied to the toggle buttons (prop retained for compatibility).                                                                                | `'my-toggle-class'`, `'class-1 class-2'`                                                                                     |
-| onClick                  | Function                 |             | Function executed on click on 'Show more' or 'Show less'                                                                                                      | `onClick={this.executeOnClick}`                                                                                               |
-| expanded                 | boolean                  | 'false'     | Control the text to be shown as expanded                                                                                                                      | `expanded={true}`                                                                                                             |
-| animate                  | boolean                  | 'false'     | Animate the height when expanding or collapsing. Respects the user's reduced-motion preference.                                                                | `animate={true}`                                                                                                              |
-| expandByClick            | boolean                  | 'true'      | Toggle expansion when the button is activated.                                                                                                               | `expandByClick={false}`                                                                                                       |
-| width                    | number                   | `0`         | If not `0`, the calculation of the content will be based on this number.                                                                                      |                                                                                                                               |
-| keepNewLines             | boolean                  | 'false'     | Controls the new lines in text to be kept or not. When set to true, only strings can be passed in as children, and not html nodes.                            | `keepNewLines={true}`                                                                                                         |
-| truncatedEndingComponent | string                   | '...'       | Control the text to be shown at the end of short text                                                                                                         | `truncatedEndingComponent={'... '}`                                                                                           |
-| onTruncate               | Function                 | undefined   | Function executed on click on Truncate                                                                                                                        | `onTruncate={() => {alert('Turncated!')}}`                                                                                    |
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `React.ReactNode` | — | Content to truncate. Strings render as text; React elements can retain their formatting and classes in the collapsed view. Use either `children` or `dangerouslySetInnerHTML`, not both. |
+| `dangerouslySetInnerHTML` | `{ __html: string }` | — | HTML content to truncate. Only pass trusted or sanitized HTML. Cannot be combined with `children`. |
+| `lines` | `number \| false` | `3` | Maximum visible lines before truncation. `false` or a number less than `1` disables truncation. |
+| `more` | `React.ReactNode` | `"Show more"` | Label or React node for the expand button. |
+| `less` | `React.ReactNode` | `"Show less"` | Label or React node for the collapse button. |
+| `truncatedEndingComponent` | `React.ReactNode` | `"... "` | Content displayed immediately before the expand button. |
+| `expanded` | `boolean` | `false` | Whether the component starts expanded. |
+| `animate` | `boolean` | `false` | Animate height during expansion and collapse; automatically disabled when reduced motion is preferred. |
+| `expandByClick` | `boolean` | `true` | Whether activating the toggle changes the expanded state. When `false`, the click callback still runs. |
+| `onClick` | `(isExpanded: boolean, event: React.MouseEvent<HTMLButtonElement>) => void` | — | Called when a toggle is activated, with the current expanded state and click event. |
+| `onTruncate` | `() => void` | — | Called when the content's truncation status changes. |
+| `width` | `number` | `0` | Optional width in pixels for measuring content. `0` uses the available container width. |
+| `keepNewLines` | `boolean` | `false` | Preserve newline characters in string children. This option is for string content. |
+| `className` | `string` | — | Class name(s) applied to the outer wrapper. |
+| `anchorClass` | `string` | `"show-more-less-clickable"` | Class name(s) applied to the toggle buttons. The prop name is retained for compatibility. |
+| `id` | `string` | Generated | ID for the content region referenced by the toggle button. A unique ID is generated when omitted. |
+| `aria-label` | `string` | — | Optional accessible name for the toggle button. Its expanded state is exposed separately. |
 
-### Accessibility
+`ShowMoreTextProps` also enforces that `children` and `dangerouslySetInnerHTML` are not used together in TypeScript.
 
-The Show More / Show Less control is a native `type="button"` element, so it
-supports standard keyboard activation with **Enter** and **Space** and can be
-reached using Tab. The button styling, including its visible keyboard focus indicator, is applied
-by the component itself. No additional stylesheet import is needed.
+## Accessibility
 
-Each instance generates a stable, unique ID for its content. The toggle button
-references it with `aria-controls` and exposes its current state with
-`aria-expanded`. Set `id` to provide your own content ID, and optionally pass an
-`aria-label` if the visible “Show more” / “Show less” text needs additional
-context:
+The show-more/show-less control is a native `type="button"` element. It can be reached with Tab and activated with Enter or Space. The component exposes its state through `aria-expanded` and connects the button to the content with `aria-controls`. A unique content ID is generated unless you provide one.
+
+Add an `aria-label` when the visible button label needs more context:
 
 ```jsx
 <ShowMoreText
   id="article-summary"
   aria-label="Toggle article summary"
   lines={3}
+  more="Show more"
+  less="Show less"
 >
-  The article summary content...
+  The article summary...
 </ShowMoreText>
 ```
 
-The component updates `aria-expanded` when toggled. Its visible label also
-switches between “Show more” and “Show less”; no live region is used, avoiding
-redundant announcements.
+The visible label changes between the values of `more` and `less`. No live region is used.
 
-### Rich React content
+## Rich content and HTML
 
-When `children` contains React elements, formatting and classes on inline elements are
-preserved in the collapsed view. This supports editor output containing elements such
-as `<strong>`, `<em>`, `<u>`, mentions, links, and elements with `className` or `style`.
+When React element children are truncated, their rendered formatting and classes are retained in the collapsed view:
 
 ```jsx
 <ShowMoreText lines={3}>
   <p>
-    <strong>Bold text</strong>{" "}
-    <em>Italic text</em>{" "}
-    <u>Underlined text</u>, and{" "}
-    <span className="mention">@Jane</span>.
+    <strong>Important</strong>, <em>emphasized</em>, and{" "}
+    <span className="mention">@mentioned</span> text can appear together.
+    Include additional content to demonstrate truncation.
   </p>
 </ShowMoreText>
 ```
 
-String children remain plain text and HTML-like strings are escaped for security.
-
-To render HTML, pass it through `dangerouslySetInnerHTML`. Only use trusted or
-sanitized HTML, and do not pass `children` at the same time:
+String children are rendered as text, so HTML-like strings are escaped. To render HTML, provide trusted or sanitized markup using `dangerouslySetInnerHTML`:
 
 ```jsx
 <ShowMoreText
@@ -185,70 +161,23 @@ sanitized HTML, and do not pass `children` at the same time:
 />
 ```
 
-## Developing
+Do not pass `children` at the same time. HTML is rendered with React's `dangerouslySetInnerHTML`; sanitize untrusted input before passing it to the component.
 
-Install development dependencies
+## Demo and development
 
-```
-$ npm install
-```
+Explore the [live demo](https://www.devzonetech.com/demo/react-show-more-text/build/) or run the project locally:
 
-### Build & Compilation
-
-Build the library (ESM and CJS bundles with Vite)
-
-```
-$ npm run build
+```sh
+npm install
+npm run storybook
 ```
 
-Watch for changes and rebuild automatically
+Useful project scripts:
 
-```
-$ npm run build:watch
-```
-
-Start development server (Vite)
-
-```
-$ npm run dev
-```
-
-Clean the dist folder
-
-```
-$ npm run clean
-```
-
-### Testing & Quality
-
-Run tests
-
-```
-$ npm test
-```
-
-Run tests in watch mode
-
-```
-$ npm test:watch
-```
-
-Run code linter
-
-```
-$ npm run lint
-```
-
-### Storybook
-
-Interactive component documentation and sandbox
-
-```
-$ npm run storybook
-```
-
-Build static Storybook site
-
-```
-$ npm run build-storybook
-```
+| Command | Description |
+| --- | --- |
+| `npm test -- --run` | Run the unit tests once. |
+| `npm run test:types` | Check the TypeScript usage tests. |
+| `npm run lint` | Lint the source files. |
+| `npm run build` | Build the ESM and CommonJS bundles and copy type declarations. |
+| `npm run build-storybook` | Build the static Storybook site. |
